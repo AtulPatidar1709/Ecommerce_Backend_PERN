@@ -1,15 +1,17 @@
-import express from 'express';
+import { app } from './src';
+import { config } from './src/config/config';
 
-const app = express();
+const startServer = async () => {
+  try {
+    const port = config.port || 5513;
 
-app.use(express.json());
+    app.listen(port, () => {
+      console.log(`🚀 Server listening on port ${port}`);
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server', error);
+    process.exit(1);
+  }
+};
 
-app.get("/" , (req, res) => {
-   res.status(200).json({
-      message : "Hello"
-   })
-});
-
-app.listen(4000, () => {
-   console.log("Connected to server successfully.")
-});
+startServer();
