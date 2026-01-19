@@ -1,0 +1,12 @@
+model UserCoupon {
+  id        String   @id @default(uuid())
+  userId    String
+  couponId  String
+  used      Boolean  @default(false)
+  usedAt    DateTime?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  coupon Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, couponId])
+}

@@ -1,0 +1,22 @@
+model Order {
+  id             String      @id @default(uuid())
+  userId         String
+  addressId      String
+  couponId       String?
+  totalAmount    Float
+  discountAmount Float       @default(0)
+  status         OrderStatus @default(PENDING)
+
+  user       User      @relation(fields: [userId], references: [id])
+  address    Address   @relation(fields: [addressId], references: [id])
+  coupon     Coupon?   @relation(fields: [couponId], references: [id])
+  orderItems OrderItem[]
+  payment    Payment?
+  cancellation OrderCancellation?
+  return       OrderReturn?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([status])
+}

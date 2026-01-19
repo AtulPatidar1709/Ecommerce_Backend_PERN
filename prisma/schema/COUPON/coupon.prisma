@@ -1,0 +1,17 @@
+model Coupon {
+  id                String        @id @default(uuid())
+  code              String        @unique
+  description       String
+  discountType      DiscountType
+  discountValue     Float
+  minOrderAmount    Float
+  maxDiscountAmount Float
+  validFrom         DateTime
+  validTo           DateTime
+  isActive          Boolean       @default(true)
+
+  orders        Order[]
+  couponUsages  UserCoupon[]
+
+  createdAt DateTime @default(now())
+}

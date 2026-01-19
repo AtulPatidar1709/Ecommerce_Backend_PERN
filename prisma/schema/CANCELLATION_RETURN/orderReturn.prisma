@@ -1,0 +1,12 @@
+model OrderReturn {
+  id          String        @id @default(uuid())
+  orderId     String        @unique
+  userId      String
+  reason      String
+  status      RequestStatus @default(REQUESTED)
+  requestedAt DateTime      @default(now())
+  processedAt DateTime?
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id])
+}

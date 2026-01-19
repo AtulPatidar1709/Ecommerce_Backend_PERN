@@ -1,0 +1,13 @@
+model Payment {
+  id                  String        @id @default(uuid())
+  orderId             String        @unique
+  razorpayOrderId     String
+  razorpayPaymentId   String?
+  razorpaySignature   String?
+  amount              Float
+  status              PaymentStatus @default(CREATED)
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}

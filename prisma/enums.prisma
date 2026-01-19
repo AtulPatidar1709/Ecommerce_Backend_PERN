@@ -1,0 +1,36 @@
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AuthProvider {
+  MANUAL
+  GOOGLE
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  CREATED
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FLAT
+}
+
+enum RequestStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  COMPLETED
+}
