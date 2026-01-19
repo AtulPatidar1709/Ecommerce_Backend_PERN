@@ -66,6 +66,7 @@ export const ModelName = {
   Payment: 'Payment',
   Review: 'Review',
   OTPVerification: 'OTPVerification',
+  RefreshToken: 'RefreshToken',
   User: 'User'
 } as const
 
@@ -275,6 +276,18 @@ export const OTPVerificationScalarFieldEnum = {
 } as const
 
 export type OTPVerificationScalarFieldEnum = (typeof OTPVerificationScalarFieldEnum)[keyof typeof OTPVerificationScalarFieldEnum]
+
+
+export const RefreshTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  revoked: 'revoked',
+  createdAt: 'createdAt'
+} as const
+
+export type RefreshTokenScalarFieldEnum = (typeof RefreshTokenScalarFieldEnum)[keyof typeof RefreshTokenScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {

@@ -1,19 +1,22 @@
 model User {
-  id         String   @id @default(uuid())
+  id         String       @id @default(uuid())
   name       String?
-  email      String?  @unique
-  phone      String?  @unique
+  email      String      @unique
+  phone      String?      @unique
   password   String?
-  role       Role     @default(USER)
+  role       Role         @default(USER)
   provider   AuthProvider @default(MANUAL)
-  isVerified Boolean  @default(false)
+  isVerified Boolean      @default(false)
 
+  refreshTokens    RefreshToken[]
   otpVerifications OTPVerification[]
   addresses        Address[]
   cartItems        CartItem[]
   orders           Order[]
   reviews          Review[]
   couponUsages     UserCoupon[]
+
+
   cancellations    OrderCancellation[]
   returns          OrderReturn[]
 

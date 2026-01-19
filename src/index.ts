@@ -1,8 +1,12 @@
 import express from 'express';
+import authRoutes from './auth/auth.routes';
+import { globalErrorHandler } from './middlewares/globalErrorHandler';
 
 const app = express();
 
 app.use(express.json());
+
+app.use('/api/auth', authRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -10,8 +14,6 @@ app.get('/', (req, res) => {
   });
 });
 
-app.listen(4000, () => {
-  console.log('Connected to server successfully.');
-});
+app.use(globalErrorHandler);
 
 export { app };

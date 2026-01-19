@@ -1,6 +1,6 @@
 model OrderItem {
   id        String @id @default(uuid())
-  orderId  String
+  orderId   String
   productId String
   price     Float
   quantity  Int

@@ -93,6 +93,11 @@ export type Review = Prisma.ReviewModel
  */
 export type OTPVerification = Prisma.OTPVerificationModel
 /**
+ * Model RefreshToken
+ * 
+ */
+export type RefreshToken = Prisma.RefreshTokenModel
+/**
  * Model User
  * 
  */

@@ -1,6 +1,6 @@
 model Coupon {
-  id                String        @id @default(uuid())
-  code              String        @unique
+  id                String       @id @default(uuid())
+  code              String       @unique
   description       String
   discountType      DiscountType
   discountValue     Float
@@ -8,10 +8,10 @@ model Coupon {
   maxDiscountAmount Float
   validFrom         DateTime
   validTo           DateTime
-  isActive          Boolean       @default(true)
+  isActive          Boolean      @default(true)
 
-  orders        Order[]
-  couponUsages  UserCoupon[]
+  orders       Order[]
+  couponUsages UserCoupon[]
 
   createdAt DateTime @default(now())
 }

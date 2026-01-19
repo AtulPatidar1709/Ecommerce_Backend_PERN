@@ -1,9 +1,9 @@
 model Category {
-  id        String   @id @default(uuid())
-  name      String
-  slug      String   @unique
+  id       String  @id @default(uuid())
+  name     String
+  slug     String  @unique
   imageUrl String?
-  isActive  Boolean  @default(true)
+  isActive Boolean @default(true)
 
   products Product[]
 
