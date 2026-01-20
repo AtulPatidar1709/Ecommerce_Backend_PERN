@@ -1,12 +1,11 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { AppError } from '../../utils/AppError';
 import { config } from '../../config/config';
 import { isJwtPayload } from '../../types/isJwtPayload';
-import { AuthenticatedRequest } from './types/AuthenticatedRequestTypes';
 
 export const requireAuth = (
-  req: AuthenticatedRequest,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {

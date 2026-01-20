@@ -10,7 +10,7 @@ enum AuthProvider {
 
 enum OrderStatus {
   PENDING
-  PAID
+  CONFIRMED
   SHIPPED
   DELIVERED
   CANCELLED

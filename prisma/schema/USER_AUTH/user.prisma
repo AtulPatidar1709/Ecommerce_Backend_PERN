@@ -16,7 +16,6 @@ model User {
   reviews          Review[]
   couponUsages     UserCoupon[]
 
-
   cancellations    OrderCancellation[]
   returns          OrderReturn[]
 

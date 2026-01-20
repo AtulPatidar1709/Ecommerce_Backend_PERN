@@ -1,27 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import * as orderService from './order.service';
 import {
-  getOrdersQuerySchema,
   getOrderByIdSchema,
   createOrderSchema,
   updateOrderStatusSchema,
 } from './oder.schema';
-import { AppError } from '../utils/AppError';
-
-// Helper to extract user ID from authenticated request
-const getUserId = (req: Request): string => {
-  const userId = (req as any).user?.id;
-  if (!userId) {
-    throw new AppError('User not authenticated', 401);
-  }
-  return userId;
-};
-
-// Helper to parse and validate query parameters
-const parseQuery = (query: Record<string, unknown>) => {
-  return getOrdersQuerySchema.parse(query);
-};
-
+import { getUserId, parseQuery } from './helper/helper';
 export const createOrderController = async (
   req: Request,
   res: Response,
@@ -51,7 +35,6 @@ export const getUserOrdersController = async (
   try {
     const userId = getUserId(req);
     const query = parseQuery(req.query);
-
     const result = await orderService.getUserOrders(userId, query);
 
     res.status(200).json({

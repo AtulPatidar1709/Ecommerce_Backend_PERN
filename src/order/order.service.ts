@@ -19,7 +19,7 @@ const validateUserAddress = async (userId: string, addressId: string) => {
 
 const validateProducts = async (
   items: CreateOrderInput['cartItems'],
-): Promise<Map<string, number>> => {
+): Promise<{ productMap: Map<string, number>; totalAmount: number }> => {
   const productMap = new Map<string, number>();
 
   const products = await prisma.product.findMany({
@@ -30,23 +30,34 @@ const validateProducts = async (
     throw new AppError('One or more products not found', 404);
   }
 
+  let totalAmount = 0;
+
   items.forEach((item) => {
     const product = products.find((p) => p.id === item.productId);
+
     if (!product) {
       throw new AppError(`Product ${item.productId} not found`, 404);
     }
 
     if (product.stock < item.quantity) {
       throw new AppError(
-        `Insufficient stock for product ${product.title}`,
+        `Insufficient stock for product ${product.title}. Available: ${product.stock}`,
         400,
       );
     }
 
+    if (product.price !== item.price) {
+      throw new AppError(
+        `Price mismatch for product ${product.title}. Current price: ${product.price}`,
+        400,
+      );
+    }
+
+    totalAmount += item.price * item.quantity;
     productMap.set(item.productId, item.quantity);
   });
 
-  return productMap;
+  return { productMap, totalAmount };
 };
 
 const applyCoupon = async (
@@ -89,69 +100,86 @@ const applyCoupon = async (
 
 export const createOrder = async (userId: string, data: CreateOrderInput) => {
   await validateUserAddress(userId, data.addressId);
-  await validateProducts(data.cartItems);
 
-  const totalAmount = data.cartItems.reduce(
-    (sum: number, item: any) => sum + item.price * item.quantity,
-    0,
-  );
+  const { totalAmount } = await validateProducts(data.cartItems);
 
   const { discountAmount, finalAmount } = await applyCoupon(
     data.couponId,
     totalAmount,
   );
 
-  const order = await prisma.order.create({
-    data: {
-      userId,
-      addressId: data.addressId,
-      couponId: data.couponId,
-      totalAmount: finalAmount,
-      discountAmount,
-      orderItems: {
-        create: data.cartItems.map((item) => ({
-          productId: item.productId,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-      },
-    },
-    include: {
-      orderItems: {
-        include: { product: true },
-      },
-      address: true,
-      coupon: true,
-      payment: true,
-    },
-  });
+  try {
+    const order = await prisma.$transaction(async (tx) => {
+      await Promise.all(
+        data.cartItems.map((item) =>
+          tx.product.update({
+            where: { id: item.productId },
+            data: { stock: { decrement: item.quantity } },
+          }),
+        ),
+      );
 
-  return order;
+      return tx.order.create({
+        data: {
+          userId,
+          addressId: data.addressId,
+          couponId: data.couponId,
+          totalAmount: finalAmount,
+          discountAmount,
+          orderItems: {
+            create: data.cartItems.map((item) => ({
+              productId: item.productId,
+              price: item.price,
+              quantity: item.quantity,
+            })),
+          },
+        },
+        include: {
+          orderItems: { include: { product: true } },
+          address: true,
+          coupon: true,
+          payment: true,
+        },
+      });
+    });
+
+    return order;
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new AppError('Failed to create order', 500);
+  }
 };
 
 export const getUserOrders = async (userId: string, query: GetOrdersQuery) => {
   const skip = (Number(query.page) - 1) * Number(query.limit);
+  const limit = Number(query.limit);
 
   const whereClause = {
     userId,
     ...(query.status && { status: query.status }),
   };
 
+  // Run both queries in parallel
   const [orders, total] = await Promise.all([
     prisma.order.findMany({
       where: whereClause,
       skip,
-      take: Number(query.limit),
+      take: limit,
       orderBy: {
-        [query.sortBy || 'createdAt']: query.order,
+        [query.sortBy === 'totalAmount' ? 'totalAmount' : 'createdAt']:
+          query.order === 'asc' ? 'asc' : 'desc',
       },
       include: {
         orderItems: {
-          include: { product: { select: { title: true, images: true } } },
+          include: {
+            product: {
+              select: { id: true, title: true, images: true },
+            },
+          },
         },
         address: true,
         coupon: true,
-        payment: { select: { status: true } },
+        payment: { select: { status: true, paymentMethod: true } },
         cancellation: true,
         return: true,
       },
@@ -164,8 +192,8 @@ export const getUserOrders = async (userId: string, query: GetOrdersQuery) => {
     pagination: {
       total,
       page: Number(query.page),
-      limit: Number(query.limit),
-      pages: Math.ceil(total / Number(query.limit)),
+      limit,
+      pages: Math.ceil(total / limit),
     },
   };
 };
@@ -229,9 +257,25 @@ export const cancelOrder = async (userId: string, orderId: string) => {
     throw new AppError('Only pending orders can be cancelled', 400);
   }
 
-  return prisma.order.update({
-    where: { id: orderId },
-    data: { status: 'CANCELLED' },
-    include: { orderItems: true, payment: true },
-  });
+  try {
+    return await prisma.$transaction(async (tx) => {
+      await Promise.all(
+        order.orderItems.map((item) =>
+          tx.product.update({
+            where: { id: item.productId },
+            data: { stock: { increment: item.quantity } },
+          }),
+        ),
+      );
+
+      return tx.order.update({
+        where: { id: orderId },
+        data: { status: 'CANCELLED' },
+        include: { orderItems: true, payment: true },
+      });
+    });
+  } catch (error) {
+    if (error instanceof AppError) throw error;
+    throw new AppError('Failed to cancel order', 500);
+  }
 };

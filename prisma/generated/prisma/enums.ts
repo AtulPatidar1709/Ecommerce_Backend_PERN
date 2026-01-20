@@ -27,7 +27,7 @@ export type AuthProvider = (typeof AuthProvider)[keyof typeof AuthProvider]
 
 export const OrderStatus = {
   PENDING: 'PENDING',
-  PAID: 'PAID',
+  CONFIRMED: 'CONFIRMED',
   SHIPPED: 'SHIPPED',
   DELIVERED: 'DELIVERED',
   CANCELLED: 'CANCELLED'

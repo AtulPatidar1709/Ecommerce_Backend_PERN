@@ -1,5 +1,6 @@
 import express from 'express';
 import authRoutes from './auth/auth.routes';
+import addressRoutes from './address/address.routes';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser';
 import { config } from './config/config';
@@ -10,6 +11,7 @@ app.use(cookieParser(config.cookieSecret));
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/address', addressRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({
