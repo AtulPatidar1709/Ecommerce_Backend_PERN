@@ -7,7 +7,7 @@ model User {
   role       Role         @default(USER)
   provider   AuthProvider @default(MANUAL)
   isVerified Boolean      @default(false)
-
+  isActive   Boolean      @default(true)
   refreshTokens    RefreshToken[]
   otpVerifications OTPVerification[]
   addresses        Address[]

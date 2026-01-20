@@ -6,7 +6,7 @@ const quantitySchema = z
   .number()
   .int('Quantity must be a whole number')
   .min(1, 'Quantity must be at least 1')
-  .max(999, 'Quantity cannot exceed 999');
+  .max(10, 'Quantity cannot exceed 999');
 
 // Composed schemas
 export const addToCartSchema = z.object({
