@@ -226,7 +226,8 @@ export const OrderScalarFieldEnum = {
   totalAmount: 'totalAmount',
   discountAmount: 'discountAmount',
   status: 'status',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -246,12 +247,14 @@ export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof t
 export const PaymentScalarFieldEnum = {
   id: 'id',
   orderId: 'orderId',
+  amount: 'amount',
+  status: 'status',
+  paymentMethod: 'paymentMethod',
   razorpayOrderId: 'razorpayOrderId',
   razorpayPaymentId: 'razorpayPaymentId',
   razorpaySignature: 'razorpaySignature',
-  amount: 'amount',
-  status: 'status',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]

@@ -62,3 +62,11 @@ export const RequestStatus = {
 } as const
 
 export type RequestStatus = (typeof RequestStatus)[keyof typeof RequestStatus]
+
+
+export const PaymentMethod = {
+  COD: 'COD',
+  RAZORPAY: 'RAZORPAY'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]

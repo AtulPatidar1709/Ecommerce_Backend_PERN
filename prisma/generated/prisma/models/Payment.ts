@@ -37,34 +37,40 @@ export type PaymentSumAggregateOutputType = {
 export type PaymentMinAggregateOutputType = {
   id: string | null
   orderId: string | null
+  amount: number | null
+  status: $Enums.PaymentStatus | null
+  paymentMethod: $Enums.PaymentMethod | null
   razorpayOrderId: string | null
   razorpayPaymentId: string | null
   razorpaySignature: string | null
-  amount: number | null
-  status: $Enums.PaymentStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PaymentMaxAggregateOutputType = {
   id: string | null
   orderId: string | null
+  amount: number | null
+  status: $Enums.PaymentStatus | null
+  paymentMethod: $Enums.PaymentMethod | null
   razorpayOrderId: string | null
   razorpayPaymentId: string | null
   razorpaySignature: string | null
-  amount: number | null
-  status: $Enums.PaymentStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PaymentCountAggregateOutputType = {
   id: number
   orderId: number
+  amount: number
+  status: number
+  paymentMethod: number
   razorpayOrderId: number
   razorpayPaymentId: number
   razorpaySignature: number
-  amount: number
-  status: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -80,34 +86,40 @@ export type PaymentSumAggregateInputType = {
 export type PaymentMinAggregateInputType = {
   id?: true
   orderId?: true
+  amount?: true
+  status?: true
+  paymentMethod?: true
   razorpayOrderId?: true
   razorpayPaymentId?: true
   razorpaySignature?: true
-  amount?: true
-  status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type PaymentMaxAggregateInputType = {
   id?: true
   orderId?: true
+  amount?: true
+  status?: true
+  paymentMethod?: true
   razorpayOrderId?: true
   razorpayPaymentId?: true
   razorpaySignature?: true
-  amount?: true
-  status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type PaymentCountAggregateInputType = {
   id?: true
   orderId?: true
+  amount?: true
+  status?: true
+  paymentMethod?: true
   razorpayOrderId?: true
   razorpayPaymentId?: true
   razorpaySignature?: true
-  amount?: true
-  status?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -200,12 +212,14 @@ export type PaymentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type PaymentGroupByOutputType = {
   id: string
   orderId: string
-  razorpayOrderId: string
-  razorpayPaymentId: string | null
-  razorpaySignature: string | null
   amount: number
   status: $Enums.PaymentStatus
+  paymentMethod: $Enums.PaymentMethod
+  razorpayOrderId: string | null
+  razorpayPaymentId: string | null
+  razorpaySignature: string | null
   createdAt: Date
+  updatedAt: Date
   _count: PaymentCountAggregateOutputType | null
   _avg: PaymentAvgAggregateOutputType | null
   _sum: PaymentSumAggregateOutputType | null
@@ -234,24 +248,28 @@ export type PaymentWhereInput = {
   NOT?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   id?: Prisma.StringFilter<"Payment"> | string
   orderId?: Prisma.StringFilter<"Payment"> | string
-  razorpayOrderId?: Prisma.StringFilter<"Payment"> | string
-  razorpayPaymentId?: Prisma.StringNullableFilter<"Payment"> | string | null
-  razorpaySignature?: Prisma.StringNullableFilter<"Payment"> | string | null
   amount?: Prisma.FloatFilter<"Payment"> | number
   status?: Prisma.EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
+  razorpayOrderId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  razorpayPaymentId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  razorpaySignature?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
 }
 
 export type PaymentOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  razorpayOrderId?: Prisma.SortOrder
-  razorpayPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  razorpaySignature?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  razorpayOrderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpaySignature?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   order?: Prisma.OrderOrderByWithRelationInput
 }
 
@@ -261,24 +279,28 @@ export type PaymentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
   OR?: Prisma.PaymentWhereInput[]
   NOT?: Prisma.PaymentWhereInput | Prisma.PaymentWhereInput[]
-  razorpayOrderId?: Prisma.StringFilter<"Payment"> | string
-  razorpayPaymentId?: Prisma.StringNullableFilter<"Payment"> | string | null
-  razorpaySignature?: Prisma.StringNullableFilter<"Payment"> | string | null
   amount?: Prisma.FloatFilter<"Payment"> | number
   status?: Prisma.EnumPaymentStatusFilter<"Payment"> | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodFilter<"Payment"> | $Enums.PaymentMethod
+  razorpayOrderId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  razorpayPaymentId?: Prisma.StringNullableFilter<"Payment"> | string | null
+  razorpaySignature?: Prisma.StringNullableFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Payment"> | Date | string
   order?: Prisma.XOR<Prisma.OrderScalarRelationFilter, Prisma.OrderWhereInput>
 }, "id" | "orderId">
 
 export type PaymentOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  razorpayOrderId?: Prisma.SortOrder
-  razorpayPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  razorpaySignature?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  razorpayOrderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpayPaymentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  razorpaySignature?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.PaymentCountOrderByAggregateInput
   _avg?: Prisma.PaymentAvgOrderByAggregateInput
   _max?: Prisma.PaymentMaxOrderByAggregateInput
@@ -292,88 +314,104 @@ export type PaymentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.PaymentScalarWhereWithAggregatesInput | Prisma.PaymentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Payment"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"Payment"> | string
-  razorpayOrderId?: Prisma.StringWithAggregatesFilter<"Payment"> | string
-  razorpayPaymentId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
-  razorpaySignature?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   amount?: Prisma.FloatWithAggregatesFilter<"Payment"> | number
   status?: Prisma.EnumPaymentStatusWithAggregatesFilter<"Payment"> | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodWithAggregatesFilter<"Payment"> | $Enums.PaymentMethod
+  razorpayOrderId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  razorpayPaymentId?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
+  razorpaySignature?: Prisma.StringNullableWithAggregatesFilter<"Payment"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Payment"> | Date | string
 }
 
 export type PaymentCreateInput = {
   id?: string
-  razorpayOrderId: string
-  razorpayPaymentId?: string | null
-  razorpaySignature?: string | null
   amount: number
   status?: $Enums.PaymentStatus
+  paymentMethod?: $Enums.PaymentMethod
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
   order: Prisma.OrderCreateNestedOneWithoutPaymentInput
 }
 
 export type PaymentUncheckedCreateInput = {
   id?: string
   orderId: string
-  razorpayOrderId: string
-  razorpayPaymentId?: string | null
-  razorpaySignature?: string | null
   amount: number
   status?: $Enums.PaymentStatus
+  paymentMethod?: $Enums.PaymentMethod
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PaymentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayOrderId?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   order?: Prisma.OrderUpdateOneRequiredWithoutPaymentNestedInput
 }
 
 export type PaymentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayOrderId?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PaymentCreateManyInput = {
   id?: string
   orderId: string
-  razorpayOrderId: string
-  razorpayPaymentId?: string | null
-  razorpaySignature?: string | null
   amount: number
   status?: $Enums.PaymentStatus
+  paymentMethod?: $Enums.PaymentMethod
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PaymentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayOrderId?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PaymentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayOrderId?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PaymentNullableScalarRelationFilter = {
@@ -384,12 +422,14 @@ export type PaymentNullableScalarRelationFilter = {
 export type PaymentCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   razorpayOrderId?: Prisma.SortOrder
   razorpayPaymentId?: Prisma.SortOrder
   razorpaySignature?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PaymentAvgOrderByAggregateInput = {
@@ -399,23 +439,27 @@ export type PaymentAvgOrderByAggregateInput = {
 export type PaymentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   razorpayOrderId?: Prisma.SortOrder
   razorpayPaymentId?: Prisma.SortOrder
   razorpaySignature?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PaymentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  status?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
   razorpayOrderId?: Prisma.SortOrder
   razorpayPaymentId?: Prisma.SortOrder
   razorpaySignature?: Prisma.SortOrder
-  amount?: Prisma.SortOrder
-  status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PaymentSumOrderByAggregateInput = {
@@ -458,24 +502,32 @@ export type EnumPaymentStatusFieldUpdateOperationsInput = {
   set?: $Enums.PaymentStatus
 }
 
+export type EnumPaymentMethodFieldUpdateOperationsInput = {
+  set?: $Enums.PaymentMethod
+}
+
 export type PaymentCreateWithoutOrderInput = {
   id?: string
-  razorpayOrderId: string
-  razorpayPaymentId?: string | null
-  razorpaySignature?: string | null
   amount: number
   status?: $Enums.PaymentStatus
+  paymentMethod?: $Enums.PaymentMethod
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PaymentUncheckedCreateWithoutOrderInput = {
   id?: string
-  razorpayOrderId: string
-  razorpayPaymentId?: string | null
-  razorpaySignature?: string | null
   amount: number
   status?: $Enums.PaymentStatus
+  paymentMethod?: $Enums.PaymentMethod
+  razorpayOrderId?: string | null
+  razorpayPaymentId?: string | null
+  razorpaySignature?: string | null
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PaymentCreateOrConnectWithoutOrderInput = {
@@ -496,22 +548,26 @@ export type PaymentUpdateToOneWithWhereWithoutOrderInput = {
 
 export type PaymentUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayOrderId?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PaymentUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayOrderId?: Prisma.StringFieldUpdateOperationsInput | string
-  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  razorpayOrderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpayPaymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  razorpaySignature?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -519,51 +575,59 @@ export type PaymentUncheckedUpdateWithoutOrderInput = {
 export type PaymentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  amount?: boolean
+  status?: boolean
+  paymentMethod?: boolean
   razorpayOrderId?: boolean
   razorpayPaymentId?: boolean
   razorpaySignature?: boolean
-  amount?: boolean
-  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  amount?: boolean
+  status?: boolean
+  paymentMethod?: boolean
   razorpayOrderId?: boolean
   razorpayPaymentId?: boolean
   razorpaySignature?: boolean
-  amount?: boolean
-  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  amount?: boolean
+  status?: boolean
+  paymentMethod?: boolean
   razorpayOrderId?: boolean
   razorpayPaymentId?: boolean
   razorpaySignature?: boolean
-  amount?: boolean
-  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["payment"]>
 
 export type PaymentSelectScalar = {
   id?: boolean
   orderId?: boolean
+  amount?: boolean
+  status?: boolean
+  paymentMethod?: boolean
   razorpayOrderId?: boolean
   razorpayPaymentId?: boolean
   razorpaySignature?: boolean
-  amount?: boolean
-  status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "razorpayOrderId" | "razorpayPaymentId" | "razorpaySignature" | "amount" | "status" | "createdAt", ExtArgs["result"]["payment"]>
+export type PaymentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "amount" | "status" | "paymentMethod" | "razorpayOrderId" | "razorpayPaymentId" | "razorpaySignature" | "createdAt" | "updatedAt", ExtArgs["result"]["payment"]>
 export type PaymentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
@@ -582,12 +646,14 @@ export type $PaymentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     orderId: string
-    razorpayOrderId: string
-    razorpayPaymentId: string | null
-    razorpaySignature: string | null
     amount: number
     status: $Enums.PaymentStatus
+    paymentMethod: $Enums.PaymentMethod
+    razorpayOrderId: string | null
+    razorpayPaymentId: string | null
+    razorpaySignature: string | null
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["payment"]>
   composites: {}
 }
@@ -1014,12 +1080,14 @@ export interface Prisma__PaymentClient<T, Null = never, ExtArgs extends runtime.
 export interface PaymentFieldRefs {
   readonly id: Prisma.FieldRef<"Payment", 'String'>
   readonly orderId: Prisma.FieldRef<"Payment", 'String'>
+  readonly amount: Prisma.FieldRef<"Payment", 'Float'>
+  readonly status: Prisma.FieldRef<"Payment", 'PaymentStatus'>
+  readonly paymentMethod: Prisma.FieldRef<"Payment", 'PaymentMethod'>
   readonly razorpayOrderId: Prisma.FieldRef<"Payment", 'String'>
   readonly razorpayPaymentId: Prisma.FieldRef<"Payment", 'String'>
   readonly razorpaySignature: Prisma.FieldRef<"Payment", 'String'>
-  readonly amount: Prisma.FieldRef<"Payment", 'Float'>
-  readonly status: Prisma.FieldRef<"Payment", 'PaymentStatus'>
   readonly createdAt: Prisma.FieldRef<"Payment", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Payment", 'DateTime'>
 }
     
 

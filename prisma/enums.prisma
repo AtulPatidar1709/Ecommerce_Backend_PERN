@@ -34,3 +34,8 @@ enum RequestStatus {
   REJECTED
   COMPLETED
 }
+
+enum PaymentMethod {
+  COD
+  RAZORPAY
+}

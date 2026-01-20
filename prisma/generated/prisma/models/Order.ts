@@ -45,6 +45,7 @@ export type OrderMinAggregateOutputType = {
   discountAmount: number | null
   status: $Enums.OrderStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type OrderMaxAggregateOutputType = {
@@ -56,6 +57,7 @@ export type OrderMaxAggregateOutputType = {
   discountAmount: number | null
   status: $Enums.OrderStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type OrderCountAggregateOutputType = {
@@ -67,6 +69,7 @@ export type OrderCountAggregateOutputType = {
   discountAmount: number
   status: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -90,6 +93,7 @@ export type OrderMinAggregateInputType = {
   discountAmount?: true
   status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type OrderMaxAggregateInputType = {
@@ -101,6 +105,7 @@ export type OrderMaxAggregateInputType = {
   discountAmount?: true
   status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type OrderCountAggregateInputType = {
@@ -112,6 +117,7 @@ export type OrderCountAggregateInputType = {
   discountAmount?: true
   status?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -210,6 +216,7 @@ export type OrderGroupByOutputType = {
   discountAmount: number
   status: $Enums.OrderStatus
   createdAt: Date
+  updatedAt: Date
   _count: OrderCountAggregateOutputType | null
   _avg: OrderAvgAggregateOutputType | null
   _sum: OrderSumAggregateOutputType | null
@@ -244,6 +251,7 @@ export type OrderWhereInput = {
   discountAmount?: Prisma.FloatFilter<"Order"> | number
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   address?: Prisma.XOR<Prisma.AddressScalarRelationFilter, Prisma.AddressWhereInput>
   coupon?: Prisma.XOR<Prisma.CouponNullableScalarRelationFilter, Prisma.CouponWhereInput> | null
@@ -262,6 +270,7 @@ export type OrderOrderByWithRelationInput = {
   discountAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   address?: Prisma.AddressOrderByWithRelationInput
   coupon?: Prisma.CouponOrderByWithRelationInput
@@ -283,6 +292,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   discountAmount?: Prisma.FloatFilter<"Order"> | number
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   address?: Prisma.XOR<Prisma.AddressScalarRelationFilter, Prisma.AddressWhereInput>
   coupon?: Prisma.XOR<Prisma.CouponNullableScalarRelationFilter, Prisma.CouponWhereInput> | null
@@ -301,6 +311,7 @@ export type OrderOrderByWithAggregationInput = {
   discountAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
   _avg?: Prisma.OrderAvgOrderByAggregateInput
   _max?: Prisma.OrderMaxOrderByAggregateInput
@@ -320,6 +331,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   discountAmount?: Prisma.FloatWithAggregatesFilter<"Order"> | number
   status?: Prisma.EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Order"> | Date | string
 }
 
 export type OrderCreateInput = {
@@ -328,6 +340,7 @@ export type OrderCreateInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   coupon?: Prisma.CouponCreateNestedOneWithoutOrdersInput
@@ -346,6 +359,7 @@ export type OrderUncheckedCreateInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
   cancellation?: Prisma.OrderCancellationUncheckedCreateNestedOneWithoutOrderInput
@@ -358,6 +372,7 @@ export type OrderUpdateInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   coupon?: Prisma.CouponUpdateOneWithoutOrdersNestedInput
@@ -376,6 +391,7 @@ export type OrderUncheckedUpdateInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
   cancellation?: Prisma.OrderCancellationUncheckedUpdateOneWithoutOrderNestedInput
@@ -391,6 +407,7 @@ export type OrderCreateManyInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type OrderUpdateManyMutationInput = {
@@ -399,6 +416,7 @@ export type OrderUpdateManyMutationInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderUncheckedUpdateManyInput = {
@@ -410,6 +428,7 @@ export type OrderUncheckedUpdateManyInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderListRelationFilter = {
@@ -436,6 +455,7 @@ export type OrderCountOrderByAggregateInput = {
   discountAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type OrderAvgOrderByAggregateInput = {
@@ -452,6 +472,7 @@ export type OrderMaxOrderByAggregateInput = {
   discountAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type OrderMinOrderByAggregateInput = {
@@ -463,6 +484,7 @@ export type OrderMinOrderByAggregateInput = {
   discountAmount?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type OrderSumOrderByAggregateInput = {
@@ -662,6 +684,7 @@ export type OrderCreateWithoutAddressInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   coupon?: Prisma.CouponCreateNestedOneWithoutOrdersInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
@@ -678,6 +701,7 @@ export type OrderUncheckedCreateWithoutAddressInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
   cancellation?: Prisma.OrderCancellationUncheckedCreateNestedOneWithoutOrderInput
@@ -722,6 +746,7 @@ export type OrderScalarWhereInput = {
   discountAmount?: Prisma.FloatFilter<"Order"> | number
   status?: Prisma.EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
 }
 
 export type OrderCreateWithoutCancellationInput = {
@@ -730,6 +755,7 @@ export type OrderCreateWithoutCancellationInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   coupon?: Prisma.CouponCreateNestedOneWithoutOrdersInput
@@ -747,6 +773,7 @@ export type OrderUncheckedCreateWithoutCancellationInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
   return?: Prisma.OrderReturnUncheckedCreateNestedOneWithoutOrderInput
@@ -774,6 +801,7 @@ export type OrderUpdateWithoutCancellationInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   coupon?: Prisma.CouponUpdateOneWithoutOrdersNestedInput
@@ -791,6 +819,7 @@ export type OrderUncheckedUpdateWithoutCancellationInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
   return?: Prisma.OrderReturnUncheckedUpdateOneWithoutOrderNestedInput
@@ -802,6 +831,7 @@ export type OrderCreateWithoutReturnInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   coupon?: Prisma.CouponCreateNestedOneWithoutOrdersInput
@@ -819,6 +849,7 @@ export type OrderUncheckedCreateWithoutReturnInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
   cancellation?: Prisma.OrderCancellationUncheckedCreateNestedOneWithoutOrderInput
@@ -846,6 +877,7 @@ export type OrderUpdateWithoutReturnInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   coupon?: Prisma.CouponUpdateOneWithoutOrdersNestedInput
@@ -863,6 +895,7 @@ export type OrderUncheckedUpdateWithoutReturnInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
   cancellation?: Prisma.OrderCancellationUncheckedUpdateOneWithoutOrderNestedInput
@@ -874,6 +907,7 @@ export type OrderCreateWithoutCouponInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
@@ -890,6 +924,7 @@ export type OrderUncheckedCreateWithoutCouponInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
   cancellation?: Prisma.OrderCancellationUncheckedCreateNestedOneWithoutOrderInput
@@ -928,6 +963,7 @@ export type OrderCreateWithoutOrderItemsInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   coupon?: Prisma.CouponCreateNestedOneWithoutOrdersInput
@@ -945,6 +981,7 @@ export type OrderUncheckedCreateWithoutOrderItemsInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
   cancellation?: Prisma.OrderCancellationUncheckedCreateNestedOneWithoutOrderInput
   return?: Prisma.OrderReturnUncheckedCreateNestedOneWithoutOrderInput
@@ -972,6 +1009,7 @@ export type OrderUpdateWithoutOrderItemsInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   coupon?: Prisma.CouponUpdateOneWithoutOrdersNestedInput
@@ -989,6 +1027,7 @@ export type OrderUncheckedUpdateWithoutOrderItemsInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
   cancellation?: Prisma.OrderCancellationUncheckedUpdateOneWithoutOrderNestedInput
   return?: Prisma.OrderReturnUncheckedUpdateOneWithoutOrderNestedInput
@@ -1000,6 +1039,7 @@ export type OrderCreateWithoutPaymentInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutOrdersInput
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   coupon?: Prisma.CouponCreateNestedOneWithoutOrdersInput
@@ -1017,6 +1057,7 @@ export type OrderUncheckedCreateWithoutPaymentInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   cancellation?: Prisma.OrderCancellationUncheckedCreateNestedOneWithoutOrderInput
   return?: Prisma.OrderReturnUncheckedCreateNestedOneWithoutOrderInput
@@ -1044,6 +1085,7 @@ export type OrderUpdateWithoutPaymentInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   coupon?: Prisma.CouponUpdateOneWithoutOrdersNestedInput
@@ -1061,6 +1103,7 @@ export type OrderUncheckedUpdateWithoutPaymentInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   cancellation?: Prisma.OrderCancellationUncheckedUpdateOneWithoutOrderNestedInput
   return?: Prisma.OrderReturnUncheckedUpdateOneWithoutOrderNestedInput
@@ -1072,6 +1115,7 @@ export type OrderCreateWithoutUserInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   address: Prisma.AddressCreateNestedOneWithoutOrdersInput
   coupon?: Prisma.CouponCreateNestedOneWithoutOrdersInput
   orderItems?: Prisma.OrderItemCreateNestedManyWithoutOrderInput
@@ -1088,6 +1132,7 @@ export type OrderUncheckedCreateWithoutUserInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   orderItems?: Prisma.OrderItemUncheckedCreateNestedManyWithoutOrderInput
   payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutOrderInput
   cancellation?: Prisma.OrderCancellationUncheckedCreateNestedOneWithoutOrderInput
@@ -1128,6 +1173,7 @@ export type OrderCreateManyAddressInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type OrderUpdateWithoutAddressInput = {
@@ -1136,6 +1182,7 @@ export type OrderUpdateWithoutAddressInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   coupon?: Prisma.CouponUpdateOneWithoutOrdersNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
@@ -1152,6 +1199,7 @@ export type OrderUncheckedUpdateWithoutAddressInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
   cancellation?: Prisma.OrderCancellationUncheckedUpdateOneWithoutOrderNestedInput
@@ -1166,6 +1214,7 @@ export type OrderUncheckedUpdateManyWithoutAddressInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderCreateManyCouponInput = {
@@ -1176,6 +1225,7 @@ export type OrderCreateManyCouponInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type OrderUpdateWithoutCouponInput = {
@@ -1184,6 +1234,7 @@ export type OrderUpdateWithoutCouponInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutOrdersNestedInput
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
@@ -1200,6 +1251,7 @@ export type OrderUncheckedUpdateWithoutCouponInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
   cancellation?: Prisma.OrderCancellationUncheckedUpdateOneWithoutOrderNestedInput
@@ -1214,6 +1266,7 @@ export type OrderUncheckedUpdateManyWithoutCouponInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type OrderCreateManyUserInput = {
@@ -1224,6 +1277,7 @@ export type OrderCreateManyUserInput = {
   discountAmount?: number
   status?: $Enums.OrderStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type OrderUpdateWithoutUserInput = {
@@ -1232,6 +1286,7 @@ export type OrderUpdateWithoutUserInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   address?: Prisma.AddressUpdateOneRequiredWithoutOrdersNestedInput
   coupon?: Prisma.CouponUpdateOneWithoutOrdersNestedInput
   orderItems?: Prisma.OrderItemUpdateManyWithoutOrderNestedInput
@@ -1248,6 +1303,7 @@ export type OrderUncheckedUpdateWithoutUserInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orderItems?: Prisma.OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   payment?: Prisma.PaymentUncheckedUpdateOneWithoutOrderNestedInput
   cancellation?: Prisma.OrderCancellationUncheckedUpdateOneWithoutOrderNestedInput
@@ -1262,6 +1318,7 @@ export type OrderUncheckedUpdateManyWithoutUserInput = {
   discountAmount?: Prisma.FloatFieldUpdateOperationsInput | number
   status?: Prisma.EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1304,6 +1361,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   discountAmount?: boolean
   status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   address?: boolean | Prisma.AddressDefaultArgs<ExtArgs>
   coupon?: boolean | Prisma.Order$couponArgs<ExtArgs>
@@ -1323,6 +1381,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   discountAmount?: boolean
   status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   address?: boolean | Prisma.AddressDefaultArgs<ExtArgs>
   coupon?: boolean | Prisma.Order$couponArgs<ExtArgs>
@@ -1337,6 +1396,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   discountAmount?: boolean
   status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   address?: boolean | Prisma.AddressDefaultArgs<ExtArgs>
   coupon?: boolean | Prisma.Order$couponArgs<ExtArgs>
@@ -1351,9 +1411,10 @@ export type OrderSelectScalar = {
   discountAmount?: boolean
   status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "addressId" | "couponId" | "totalAmount" | "discountAmount" | "status" | "createdAt", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "addressId" | "couponId" | "totalAmount" | "discountAmount" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   address?: boolean | Prisma.AddressDefaultArgs<ExtArgs>
@@ -1395,6 +1456,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     discountAmount: number
     status: $Enums.OrderStatus
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["order"]>
   composites: {}
 }
@@ -1833,6 +1895,7 @@ export interface OrderFieldRefs {
   readonly discountAmount: Prisma.FieldRef<"Order", 'Float'>
   readonly status: Prisma.FieldRef<"Order", 'OrderStatus'>
   readonly createdAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Order", 'DateTime'>
 }
     
 
