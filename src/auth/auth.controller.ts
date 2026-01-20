@@ -6,6 +6,7 @@ import {
   sendOtpSchema,
 } from './auth.schema';
 import * as authService from './auth.service';
+import { config } from '../config/config';
 
 export const registerController = async (
   req: Request,
@@ -29,7 +30,21 @@ export const loginController = async (
   try {
     const data = loginSchema.parse(req.body);
     const result = await authService.login(data);
-    res.json(result);
+    res.cookie('accessToken', result.accessToken, {
+      httpOnly: true,
+      signed: true,
+      secure: config.environment === 'production',
+      maxAge: 15 * 60 * 1000,
+    });
+    res.cookie('refreshToken', result.refreshToken, {
+      httpOnly: true,
+      signed: true,
+      secure: config.environment === 'production',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    res.status(201).json({
+      data: result.User,
+    });
   } catch (error) {
     next(error);
   }
@@ -69,9 +84,15 @@ export const refreshTokenController = async (
   next: NextFunction,
 ) => {
   try {
-    const token = req.cookies.refreshToken;
-    const result = await authService.refreshToken(token);
-    res.json(result);
+    const { refreshToken } = req.signedCookies;
+    const result = await authService.refreshToken(refreshToken);
+    res.cookie('accessToken', result.accessToken, {
+      httpOnly: true,
+      signed: true,
+      secure: config.environment === 'production',
+      maxAge: 15 * 60 * 1000,
+    });
+    res.status(203).json({ message: 'Token Fetch Successfully' });
   } catch (error) {
     next(error);
   }
@@ -83,7 +104,10 @@ export const logoutController = async (
   next: NextFunction,
 ) => {
   try {
+    const { refreshToken } = _req.signedCookies;
+    await authService.logOut(refreshToken);
     res.clearCookie('refreshToken');
+    res.clearCookie('accessToken');
     res.status(200).json({ message: 'Logged out' });
   } catch (error) {
     next(error);

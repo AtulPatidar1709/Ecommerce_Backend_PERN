@@ -1,28 +1,29 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import createHttpError from 'http-errors';
-import { User } from '../auth/userTypes';
+import { AuthenticatedRequest } from './types/AuthenticatedRequestTypes';
 
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: User;
-  }
-}
-
-const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+const isAdmin = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     if (!req.user) {
       return next(createHttpError(401, 'Please log in first.'));
     }
-    const { _id, role } = req.user as User;
 
-    if (!_id) {
+    const { id, role } = req.user;
+
+    if (id) {
       return next(createHttpError(404, 'Please Logged in first.'));
     }
-    if (role !== 'Admin') {
+    if (role !== 'ADMIN') {
       return next(createHttpError(404, 'Admin Only Route.'));
     }
+
     next();
-  } catch (error) {
+  } catch (error: unknown) {
+    console.log(error);
     return next(createHttpError(400, 'Something went wrong'));
   }
 };

@@ -1,8 +1,11 @@
 import express from 'express';
 import authRoutes from './auth/auth.routes';
 import { globalErrorHandler } from './middlewares/globalErrorHandler';
-
+import cookieParser from 'cookie-parser';
+import { config } from './config/config';
 const app = express();
+
+app.use(cookieParser(config.cookieSecret));
 
 app.use(express.json());
 

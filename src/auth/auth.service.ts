@@ -1,4 +1,5 @@
 import { prisma } from '../config/prisma';
+import crypto from 'crypto';
 import bcrypt from 'bcrypt';
 import { generateOtp } from '../utils/otp';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt';
@@ -61,15 +62,28 @@ export const login = async (data: LoginInput) => {
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(refreshToken)
+    .digest('hex');
+
   await prisma.refreshToken.create({
     data: {
       userId: user.id,
-      token: refreshToken,
+      token: hashedToken,
       expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     },
   });
 
-  return { accessToken };
+  const User = {
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    role: user.role,
+    isVerified: user.isVerified,
+  };
+
+  return { accessToken, refreshToken, User };
 };
 
 export const sendOtp = async (data: SendOtpInput) => {
@@ -80,6 +94,14 @@ export const sendOtp = async (data: SendOtpInput) => {
   });
 
   if (!user || !user.password) throw new AppError('Invalid credentials');
+
+  await prisma.oTPVerification.deleteMany({
+    where: {
+      userId: user.id,
+    },
+  });
+
+  if (user.isVerified) throw new AppError('Already Verified');
 
   const otp = generateOtp();
 
@@ -110,22 +132,22 @@ export const verifyOtp = async ({ userId, otp }: OtpVerifyInput) => {
   }
 
   await prisma.$transaction([
-    prisma.oTPVerification.update({
+    prisma.oTPVerification.delete({
       where: { id: record.id },
-      data: { verified: true },
     }),
     prisma.user.update({
       where: { id: userId },
       data: { isVerified: true },
     }),
   ]);
-
   return { message: 'Account verified' };
 };
 
 export const refreshToken = async (token: string) => {
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
   const stored = await prisma.refreshToken.findUnique({
-    where: { token },
+    where: { token: hashedToken },
   });
 
   if (!stored || stored.revoked) {
@@ -141,4 +163,19 @@ export const refreshToken = async (token: string) => {
   return {
     accessToken: generateAccessToken(user),
   };
+};
+
+export const logOut = async (HashedToken: string) => {
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(HashedToken)
+    .digest('hex');
+
+  const stored = await prisma.refreshToken.delete({
+    where: { token: hashedToken },
+  });
+
+  if (!stored || stored.revoked) {
+    throw new AppError('Invalid refresh token');
+  }
 };

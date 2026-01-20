@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import jwt from 'jsonwebtoken';
 import { AppError } from '../utils/AppError';
@@ -13,6 +13,7 @@ export const globalErrorHandler = (
   err: unknown,
   req: Request,
   res: Response,
+  _next: NextFunction,
 ) => {
   // Defaults
   let statusCode = 500;
