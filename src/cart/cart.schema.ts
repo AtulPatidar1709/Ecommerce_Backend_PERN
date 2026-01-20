@@ -1,0 +1,28 @@
+import { z } from 'zod';
+
+// Base validation schemas
+const productIdSchema = z.string().uuid('Invalid product ID format');
+const quantitySchema = z
+  .number()
+  .int('Quantity must be a whole number')
+  .min(1, 'Quantity must be at least 1')
+  .max(999, 'Quantity cannot exceed 999');
+
+// Composed schemas
+export const addToCartSchema = z.object({
+  productId: productIdSchema,
+  quantity: quantitySchema,
+});
+
+export const updateCartItemSchema = z.object({
+  quantity: quantitySchema,
+});
+
+export const removeFromCartSchema = z.object({
+  productId: productIdSchema,
+});
+
+// Type inference
+export type AddToCartInput = z.infer<typeof addToCartSchema>;
+export type UpdateCartItemInput = z.infer<typeof updateCartItemSchema>;
+export type RemoveFromCartInput = z.infer<typeof removeFromCartSchema>;
