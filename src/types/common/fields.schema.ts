@@ -8,6 +8,7 @@ const nameField = z
   .string()
   .min(2, 'First name must be at least 2 characters')
   .max(50, 'First name must not exceed 50 characters')
+  .toLowerCase()
   .optional();
 
 const phoneField = z
@@ -15,9 +16,11 @@ const phoneField = z
   .min(10, 'Phone must be at least 10 digits')
   .regex(/^\d+$/, 'Phone must contain only digits');
 
-const emailField = z.email({
-  message: 'Please provide a valid email address',
-});
+const emailField = z
+  .email({
+    message: 'Please provide a valid email address',
+  })
+  .toLowerCase();
 
 const passField = z
   .string()
