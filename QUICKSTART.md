@@ -110,8 +110,7 @@ curl -X POST http://localhost:5000/api/auth/register \
   -d '{
     "email": "user@example.com",
     "password": "Password123",
-    "firstName": "John",
-    "lastName": "Doe"
+    "name": "John",
   }'
 ```
 
@@ -226,8 +225,7 @@ curl -X POST http://localhost:5000/api/auth/register \
   -d '{
     "email": "user@example.com",
     "password": "SecurePass123",
-    "firstName": "John",
-    "lastName": "Doe"
+    "name": "John",
   }'
 ```
 
@@ -318,8 +316,7 @@ POST /api/auth/register
 {
   "email": "john@example.com",
   "password": "Password123",
-  "firstName": "John",
-  "lastName": "Doe"
+  "name": "John",
 }
 ```
 

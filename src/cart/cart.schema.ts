@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 // Base validation schemas
-const productIdSchema = z.string().uuid('Invalid product ID format');
+const productIdSchema = z.uuid({ message: 'Invalid product ID format' });
 const quantitySchema = z
   .number()
   .int('Quantity must be a whole number')

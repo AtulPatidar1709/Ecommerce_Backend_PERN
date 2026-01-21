@@ -5,7 +5,6 @@ import {
   getBannerSchema,
 } from './banner.schema';
 import * as bannerService from './banner.service';
-import { AppError } from '../utils/AppError';
 
 export const createBannerController = async (
   req: Request,

@@ -1,19 +1,20 @@
 import { z } from 'zod';
+import { orderIdField } from '../types/common/fields.schema';
 
 export const initiatePaymentSchema = z.object({
-  orderId: z.string().uuid('Invalid order ID'),
+  orderId: orderIdField,
   paymentMethod: z.enum(['COD', 'RAZORPAY']).default('COD'),
 });
 
 export const verifyRazorpayPaymentSchema = z.object({
-  orderId: z.string().uuid('Invalid order ID'),
+  orderId: orderIdField,
   razorpayOrderId: z.string().min(1, 'Razorpay order ID is required'),
   razorpayPaymentId: z.string().min(1, 'Razorpay payment ID is required'),
   razorpaySignature: z.string().min(1, 'Razorpay signature is required'),
 });
 
 export const getPaymentSchema = z.object({
-  id: z.string().uuid('Invalid payment ID'),
+  id: z.uuid('Invalid payment ID'),
 });
 
 export const paymentStatus = z.object({

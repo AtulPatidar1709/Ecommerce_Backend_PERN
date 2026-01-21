@@ -1,4 +1,8 @@
 import { z } from 'zod';
+import {
+  cartItemValidation,
+  orderStatusSchema,
+} from '../types/common/fields.schema';
 
 export const getOrdersQuerySchema = z.object({
   page: z
@@ -13,38 +17,23 @@ export const getOrdersQuerySchema = z.object({
     .pipe(z.number().min(1).max(100))
     .optional()
     .default(10),
-  status: z
-    .enum(['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'])
-    .optional(),
+  status: orderStatusSchema,
   sortBy: z.enum(['createdAt', 'totalAmount']).optional().default('createdAt'),
   order: z.enum(['asc', 'desc']).optional().default('desc'),
 });
 
 export const getOrderByIdSchema = z.object({
-  id: z.string().uuid('Invalid order ID'),
+  id: z.uuid('Invalid order ID'),
 });
 
 export const createOrderSchema = z.object({
-  addressId: z.string().uuid('Invalid address ID'),
-  couponId: z.string().uuid('Invalid coupon ID').optional(),
-  cartItems: z
-    .array(
-      z.object({
-        productId: z.string().uuid('Invalid product ID'),
-        quantity: z
-          .number()
-          .int('Quantity must be whole number')
-          .min(1, 'Quantity must be at least 1'),
-        price: z.number().positive('Price must be greater than 0'),
-      }),
-    )
-    .min(1, 'At least one item is required'),
+  addressId: z.uuid('Invalid address ID'),
+  couponId: z.uuid('Invalid coupon ID').optional(),
+  cartItems: cartItemValidation,
 });
 
 export const updateOrderStatusSchema = z.object({
-  status: z
-    .enum(['PENDING', 'CONFIRMED', 'SHIPPED', 'DELIVERED', 'CANCELLED'])
-    .default('PENDING'),
+  status: orderStatusSchema,
 });
 
 export type GetOrdersQuery = z.infer<typeof getOrdersQuerySchema>;

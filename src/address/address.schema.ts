@@ -1,11 +1,9 @@
 import { z } from 'zod';
+import { nameField, phoneField } from '../types/common/fields.schema';
 
 export const createAddressSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  phone: z
-    .string()
-    .min(10, 'Phone must be at least 10 digits')
-    .regex(/^\d+$/, 'Phone must contain only digits'),
+  name: nameField,
+  phone: phoneField,
   street: z.string().min(3, 'Street address is required'),
   city: z.string().min(2, 'City is required'),
   state: z.string().min(2, 'State is required'),

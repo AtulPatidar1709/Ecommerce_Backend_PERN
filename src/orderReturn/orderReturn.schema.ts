@@ -1,7 +1,8 @@
 import { z } from 'zod';
+import { orderIdField } from '../types/common/fields.schema';
 
 export const createOrderReturnSchema = z.object({
-  orderId: z.string().uuid('Invalid order ID'),
+  orderId: orderIdField,
   reason: z
     .string()
     .min(10, 'Reason must be at least 10 characters')
@@ -15,18 +16,10 @@ export const createOrderReturnSchema = z.object({
 
 export const updateOrderReturnSchema = z.object({
   status: z.enum(['REQUESTED', 'APPROVED', 'REJECTED', 'COMPLETED']),
-  adminNotes: z
-    .string()
-    .max(500, 'Admin notes must not exceed 500 characters')
-    .optional(),
-  refundAmount: z
-    .number()
-    .nonnegative('Refund amount cannot be negative')
-    .optional(),
 });
 
 export const getOrderReturnSchema = z.object({
-  id: z.string().uuid('Invalid order return ID'),
+  id: orderIdField,
 });
 
 export type CreateOrderReturnInput = z.infer<typeof createOrderReturnSchema>;

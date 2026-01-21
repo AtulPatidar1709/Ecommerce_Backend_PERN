@@ -1,37 +1,28 @@
 import { z } from 'zod';
-
-export const registerSchema = z.object({
-  name: z.string().min(2, { message: 'Name must be at least 2 characters long' }),
-
-  email: z.email({ message: 'Please provide a valid email address' }),
-
-  phone: z.string().min(10, { message: 'Phone number must contain at least 10 digits' }).optional(),
-
-  password: z.string().min(8, { message: 'Password must be at least 8 characters long' }),
-});
+import {
+  emailField,
+  nameField,
+  passField,
+  phoneField,
+  userIdField,
+} from '../types/common/fields.schema';
 
 export const sendOtpSchema = z.object({
-  email: z.email({
-    message: 'Please provide a valid email address',
-  }),
-  phone: z
-    .string()
-    .min(10, {
-      message: 'Phone number must contain at least 10 digits',
-    })
-    .optional(),
+  email: emailField,
+  phone: phoneField.optional(),
+});
+
+export const registerSchema = sendOtpSchema.extend({
+  name: nameField,
+  password: passField,
 });
 
 export const loginSchema = sendOtpSchema.extend({
-  password: z.string().min(8, {
-    message: 'Password must be at least 8 characters long',
-  }),
+  password: passField,
 });
 
 export const otpVerifySchema = z.object({
-  userId: z.uuid({
-    message: 'Invalid user ID format',
-  }),
+  userId: userIdField,
   otp: z.string().length(6, {
     message: 'OTP must be exactly 6 digits',
   }),

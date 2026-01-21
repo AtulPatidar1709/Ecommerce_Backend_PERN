@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const createOrderCancellationSchema = z.object({
-  orderId: z.string().uuid('Invalid order ID'),
+  orderId: z.uuid('Invalid order ID'),
   reason: z
     .string()
     .min(5, 'Reason must be at least 5 characters')

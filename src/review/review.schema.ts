@@ -1,16 +1,14 @@
 import { z } from 'zod';
+import {
+  commentField,
+  productIdField,
+  retingField,
+} from '../types/common/fields.schema';
 
 export const createReviewSchema = z.object({
-  productId: z.string().uuid('Invalid product ID'),
-  rating: z
-    .number()
-    .int('Rating must be an integer')
-    .min(1, 'Rating must be at least 1')
-    .max(5, 'Rating must not exceed 5'),
-  comment: z
-    .string()
-    .max(1000, 'Comment must not exceed 1000 characters')
-    .optional(),
+  productId: productIdField,
+  rating: retingField,
+  comment: commentField,
 });
 
 export const updateReviewSchema = createReviewSchema
@@ -18,7 +16,7 @@ export const updateReviewSchema = createReviewSchema
   .omit({ productId: true });
 
 export const getReviewSchema = z.object({
-  id: z.string().uuid('Invalid review ID'),
+  id: z.uuid('Invalid review ID'),
 });
 
 export type CreateReviewInput = z.infer<typeof createReviewSchema>;

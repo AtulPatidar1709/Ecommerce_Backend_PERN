@@ -1,15 +1,9 @@
 import { z } from 'zod';
+import { nameField, phoneField } from '../types/common/fields.schema';
 
 export const updateProfileSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'First name must be at least 2 characters')
-    .max(50, 'First name must not exceed 50 characters')
-    .optional(),
-  phone: z
-    .string()
-    .regex(/^[0-9]{10}$/, 'Phone number must be 10 digits')
-    .optional(),
+  name: nameField,
+  phone: phoneField,
 });
 
 export const changePasswordSchema = z
@@ -28,7 +22,7 @@ export const changePasswordSchema = z
   });
 
 export const getUserSchema = z.object({
-  id: z.string().uuid('Invalid user ID'),
+  id: z.uuid('Invalid user ID'),
 });
 
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;

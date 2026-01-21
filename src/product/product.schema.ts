@@ -13,7 +13,7 @@ export const createProductSchema = z.object({
     .int('Stock must be a whole number')
     .min(0, 'Stock cannot be negative'),
   brand: z.string().optional(),
-  categoryId: z.string().uuid('Invalid category ID format'),
+  categoryId: z.uuid('Invalid category ID format'),
   images: z
     .array(
       z.object({
@@ -22,7 +22,7 @@ export const createProductSchema = z.object({
         isPrimary: z.boolean().optional(),
       }),
     )
-    .min(3, 'At least 3 images are required'),
+    .min(4, 'At least 3 images are required'),
   primaryIndex: z.number().min(0, 'Invalid primary index'),
 });
 
