@@ -6,7 +6,6 @@ export const createCategorySchema = z.object({
   slug: z
     .string()
     .trim()
-    .toLowerCase()
     .regex(
       /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
       'Slug must contain only lowercase letters, numbers, and hyphens',

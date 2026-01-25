@@ -10,13 +10,17 @@ export const requireAuth = (
   next: NextFunction,
 ) => {
   try {
-    const token = req.signedCookies?.refreshToken;
+    const token = req.signedCookies?.accessToken;
+
+    console.log('Toke is here ', token);
 
     if (!token) {
       throw new AppError('Not logged in', 401);
     }
 
-    const decoded = jwt.verify(token, config.jwtRefreshSecret!) as unknown;
+    const decoded = jwt.verify(token, config.jwtSecret!) as unknown;
+
+    console.log('decoded is here ', decoded);
 
     // Use type guard
     if (!isJwtPayload(decoded)) {

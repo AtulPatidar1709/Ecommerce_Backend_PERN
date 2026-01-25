@@ -14,7 +14,7 @@ const isAdmin = (
 
     const { id, role } = req.user;
 
-    if (id) {
+    if (!id) {
       return next(createHttpError(404, 'Please Logged in first.'));
     }
     if (role !== 'ADMIN') {

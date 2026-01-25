@@ -6,6 +6,7 @@ import {
   updateOrderStatusSchema,
 } from './oder.schema';
 import { getUserId, parseQuery } from './helper/helper';
+
 export const createOrderController = async (
   req: Request,
   res: Response,
@@ -14,7 +15,6 @@ export const createOrderController = async (
   try {
     const userId = getUserId(req);
     const data = createOrderSchema.parse(req.body);
-
     const order = await orderService.createOrder(userId, data);
 
     res.status(201).json({

@@ -43,6 +43,7 @@ const parseCreateProductData = (
     ...body,
     price: Number((body as Record<string, unknown>).price),
     stock: Number((body as Record<string, unknown>).stock),
+    discountPrice: Number((body as Record<string, unknown>).discountPrice),
     images: imageUrls.map((url) => ({ imageUrl: url })),
     primaryIndex,
   });

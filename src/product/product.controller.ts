@@ -20,6 +20,8 @@ export const createProductController = async (
     // get all files
     const files = getFiles(req);
 
+    console.log('files length ', files.length);
+
     validateFiles(files, 3);
 
     const primaryIndex = Number(req.body.primaryIndex);
@@ -28,6 +30,8 @@ export const createProductController = async (
 
     //upload all files at cloudinary and get urls array
     const imgUrls = await uploadImages(files);
+
+    console.log('Images Urls ', imgUrls);
 
     // structure data according to our schema
     const data = parseCreateProductData(req.body, imgUrls, primaryIndex);

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { nameField, phoneField } from '../types/common/fields.schema';
 
 export const updateProfileSchema = z.object({
-  name: nameField,
+  name: nameField.optional(),
   phone: phoneField,
 });
 
