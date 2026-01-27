@@ -57,8 +57,6 @@ export const login = async (data: LoginInput) => {
 
   if (!valid) throw new AppError('Invalid credentials');
 
-  console.log('User Info ', user);
-
   const accessToken = generateAccessToken(user);
   const refreshToken = generateRefreshToken(user);
 
@@ -76,6 +74,7 @@ export const login = async (data: LoginInput) => {
   });
 
   const User = {
+    id: user.id,
     name: user.name,
     email: user.email,
     phone: user.phone,

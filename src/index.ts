@@ -1,23 +1,33 @@
+import cors from 'cors';
 import express from 'express';
-import authRoutes from './auth/auth.routes';
-import addressRoutes from './address/address.routes';
-import cartRoutes from './cart/cart.routes';
-import categoryRoutes from './category/category.routes';
-import productRoutes from './product/product.routes';
-import orderRoutes from './order/order.routes';
-import reviewRoutes from './review/review.routes';
-import couponRoutes from './coupon/coupon.routes';
-import paymentRoutes from './payment/payment.routes';
-import bannerRoutes from './banner/banner.routes';
-import orderReturnRoutes from './orderReturn/orderReturn.routes';
-import orderCancellationRoutes from './orderCancellation/orderCancellation.routes';
-import userRoutes from './user/user.routes';
-import { globalErrorHandler } from './middlewares/globalErrorHandler';
 import cookieParser from 'cookie-parser';
 import { config } from './config/config';
+import authRoutes from './auth/auth.routes';
+import cartRoutes from './cart/cart.routes';
+import userRoutes from './user/user.routes';
+import orderRoutes from './order/order.routes';
+import couponRoutes from './coupon/coupon.routes';
+import reviewRoutes from './review/review.routes';
+import bannerRoutes from './banner/banner.routes';
+import paymentRoutes from './payment/payment.routes';
+import productRoutes from './product/product.routes';
+import addressRoutes from './address/address.routes';
+import categoryRoutes from './category/category.routes';
+import orderReturnRoutes from './orderReturn/orderReturn.routes';
+import { globalErrorHandler } from './middlewares/globalErrorHandler';
+import orderCancellationRoutes from './orderCancellation/orderCancellation.routes';
 
 const app = express();
 
+// Core Security & Optimization (Top Level)
+app.use(
+  cors({
+    origin: [config.frontendDomain!, config.buildDomain!],
+    credentials: true,
+  }),
+);
+
+// Cookie & Body Parsing.
 app.use(cookieParser(config.cookieSecret));
 
 app.use(express.json());

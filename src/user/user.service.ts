@@ -11,7 +11,8 @@ export const getUserProfile = async (userId: string) => {
       email: true,
       name: true,
       phone: true,
-      isVerified: true
+      role: true,
+      isVerified: true,
     },
   });
 
