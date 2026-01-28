@@ -43,7 +43,7 @@ export const loginController = async (
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
     res.status(201).json({
-      data: result.User,
+      user: result.User,
     });
   } catch (error) {
     next(error);

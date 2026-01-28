@@ -23,7 +23,7 @@ export const getUserProfile = async (userId: string) => {
   return {
     success: true,
     message: 'User profile fetched successfully',
-    data: user,
+    user: user,
   };
 };
 
