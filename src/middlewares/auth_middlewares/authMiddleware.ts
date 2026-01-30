@@ -27,7 +27,7 @@ export const requireAuth = (
       throw new AppError('Invalid token payload', 401);
     }
 
-    req.user = { id: decoded.sub, role: decoded.role };
+    req.user = { id: decoded.sub, email: decoded.email, role: decoded.role };
 
     next();
   } catch (err: unknown) {

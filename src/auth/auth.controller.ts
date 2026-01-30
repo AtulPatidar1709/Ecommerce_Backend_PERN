@@ -56,7 +56,11 @@ export const verifyOtpController = async (
   next: NextFunction,
 ) => {
   try {
-    const data = otpVerifySchema.parse(req.body);
+    const resData = {
+      ...req.body,
+      ...req.user,
+    };
+    const data = otpVerifySchema.parse(resData);
     const result = await authService.verifyOtp(data);
     res.json(result);
   } catch (error) {

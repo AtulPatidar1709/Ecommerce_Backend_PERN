@@ -8,6 +8,7 @@ import {
   OtpVerifyInput,
   RegisterInput,
   SendOtpInput,
+  userType,
 } from './auth.schema';
 import { sendEmail } from './helper/nodeMailer';
 import { AppError } from '../utils/AppError';
@@ -57,8 +58,15 @@ export const login = async (data: LoginInput) => {
 
   if (!valid) throw new AppError('Invalid credentials');
 
-  const accessToken = generateAccessToken(user);
-  const refreshToken = generateRefreshToken(user);
+  const jwtPayload: userType = {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    phone: user.phone ?? undefined,
+  };
+
+  const accessToken = generateAccessToken(jwtPayload);
+  const refreshToken = generateRefreshToken(jwtPayload);
 
   const hashedToken = crypto
     .createHash('sha256')
@@ -88,7 +96,7 @@ export const login = async (data: LoginInput) => {
 export const sendOtp = async (data: SendOtpInput) => {
   const user = await prisma.user.findFirst({
     where: {
-      OR: [{ email: data.email }, { phone: data.phone }],
+      OR: [{ email: data.email }, { phone: data?.phone }],
     },
   });
 
@@ -121,9 +129,9 @@ export const sendOtp = async (data: SendOtpInput) => {
   return { message: 'Verification Email Sent' };
 };
 
-export const verifyOtp = async ({ userId, otp }: OtpVerifyInput) => {
+export const verifyOtp = async (data: OtpVerifyInput) => {
   const record = await prisma.oTPVerification.findFirst({
-    where: { userId, otp, verified: false },
+    where: { userId: data.id, otp: data.otp, verified: false },
   });
 
   if (!record || record.expiresAt < new Date()) {
@@ -135,7 +143,7 @@ export const verifyOtp = async ({ userId, otp }: OtpVerifyInput) => {
       where: { id: record.id },
     }),
     prisma.user.update({
-      where: { id: userId },
+      where: { id: data.id },
       data: { isVerified: true },
     }),
   ]);
@@ -159,8 +167,15 @@ export const refreshToken = async (token: string) => {
 
   if (!user) throw new AppError('User not found');
 
+  const jwtPayload: userType = {
+    id: user.id,
+    email: user.email,
+    role: user.role,
+    phone: user.phone ?? undefined,
+  };
+
   return {
-    accessToken: generateAccessToken(user),
+    accessToken: generateAccessToken(jwtPayload),
   };
 };
 
