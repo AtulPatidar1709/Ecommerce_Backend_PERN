@@ -39,3 +39,9 @@ enum PaymentMethod {
   COD
   RAZORPAY
 }
+
+enum PromotionType {
+  FEATURED
+  DEAL_OF_THE_DAY
+  FLASH_SALE
+}

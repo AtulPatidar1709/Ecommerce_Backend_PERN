@@ -70,3 +70,12 @@ export const PaymentMethod = {
 } as const
 
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const PromotionType = {
+  FEATURED: 'FEATURED',
+  DEAL_OF_THE_DAY: 'DEAL_OF_THE_DAY',
+  FLASH_SALE: 'FLASH_SALE'
+} as const
+
+export type PromotionType = (typeof PromotionType)[keyof typeof PromotionType]

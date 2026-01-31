@@ -16,6 +16,9 @@ model Product {
   orderItems OrderItem[]
   reviews    Review[]
 
+  // ⭐ Optional but nice
+  promotions Promotion[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
