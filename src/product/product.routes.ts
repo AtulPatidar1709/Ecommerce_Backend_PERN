@@ -9,11 +9,14 @@ import {
 import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
 import isAdmin from '../middlewares/auth_middlewares/isAdmin';
 import { upload } from './middlewares';
+import { getProductSummaryController } from './summary/product.summary.controller';
 
 const router = Router();
 
 // Public
 router.get('/', getAllProductsController);
+//must be before any :id route, summary express think it like id.
+router.get('/summary', getProductSummaryController);
 router.get('/:id', getProductByIdController);
 
 // Admin

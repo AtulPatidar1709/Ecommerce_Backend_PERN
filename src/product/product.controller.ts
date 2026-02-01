@@ -51,6 +51,7 @@ export const getAllProductsController = async (
 ) => {
   try {
     const products = await productService.getAllProducts();
+    console.log('Products Details. ', products);
     res.status(200).json({ success: true, data: products });
   } catch (err) {
     next(err);
