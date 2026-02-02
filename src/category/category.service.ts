@@ -43,7 +43,7 @@ export const getAllCategories = async (isActive?: boolean) => {
   return {
     success: true,
     message: 'Categories fetched successfully',
-    data: categories,
+    categories: categories,
     count: categories.length,
   };
 };

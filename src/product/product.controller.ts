@@ -17,7 +17,6 @@ export const createProductController = async (
   next: NextFunction,
 ) => {
   try {
-    // get all files
     const files = getFiles(req);
 
     console.log('files length ', files.length);
@@ -52,7 +51,7 @@ export const getAllProductsController = async (
   try {
     const products = await productService.getAllProducts();
     console.log('Products Details. ', products);
-    res.status(200).json({ success: true, data: products });
+    res.status(200).json({ success: true, products: products });
   } catch (err) {
     next(err);
   }
@@ -66,7 +65,7 @@ export const getProductByIdController = async (
   try {
     const id = req.params.id as string;
     const product = await productService.getProductById(id);
-    res.status(200).json({ success: true, data: product });
+    res.status(200).json({ success: true, product: product });
   } catch (err) {
     next(err);
   }

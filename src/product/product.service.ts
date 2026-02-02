@@ -39,12 +39,25 @@ export const createProduct = async (data: CreateProductInput) => {
 
 export const getAllProducts = async () => {
   return prisma.product.findMany({
-    where: { isActive: true },
-    include: {
+    where: {
+      isActive: true,
+    },
+    select: {
+      id: true,
+      title: true,
+      price: true,
+      discountPrice: true,
+      brand: true,
+      stock: true,
+
       images: {
-        orderBy: { position: 'asc' },
+        orderBy: [{ isPrimary: 'desc' }, { position: 'asc' }],
+        take: 2,
+        select: {
+          imageUrl: true,
+          isPrimary: true,
+        },
       },
-      category: true,
     },
   });
 };
