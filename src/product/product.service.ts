@@ -37,34 +37,114 @@ export const createProduct = async (data: CreateProductInput) => {
   return product;
 };
 
-export const getAllProducts = async () => {
-  return prisma.product.findMany({
-    where: {
-      isActive: true,
-    },
-    select: {
-      id: true,
-      title: true,
-      price: true,
-      discountPrice: true,
-      brand: true,
-      stock: true,
+interface GetAllProductsParams {
+  search?: string;
+  brand?: string[];
+  minPrice?: number;
+  maxPrice?: number;
+  rating?: number;
+  page?: number;
+  limit?: number;
+  sort?: 'price_asc' | 'price_desc' | 'latest';
+}
 
-      images: {
-        orderBy: [{ isPrimary: 'desc' }, { position: 'asc' }],
-        take: 2,
-        select: {
-          imageUrl: true,
-          isPrimary: true,
+export const getAllProducts = async ({
+  search,
+  brand,
+  minPrice,
+  maxPrice,
+  rating,
+  page = 1,
+  limit = 12,
+  sort,
+}: GetAllProductsParams) => {
+  //FILTERS
+  const where: any = {
+    isActive: true,
+  };
+
+  if (search) {
+    where.title = {
+      contains: search,
+      mode: 'insensitive',
+    };
+  }
+
+  if (brand?.length) {
+    where.brand = {
+      in: brand,
+    };
+  }
+
+  if (minPrice || maxPrice) {
+    where.price = {};
+    if (minPrice) where.price.gte = minPrice;
+    if (maxPrice) where.price.lte = maxPrice;
+  }
+
+  if (rating) {
+    where.rating = {
+      gte: rating,
+    };
+  }
+
+  //PAGINATION
+  const skip = (page - 1) * limit;
+
+  //SORTING
+  let orderBy: any = { createdAt: 'desc' };
+
+  if (sort === 'price_asc') orderBy = { price: 'asc' };
+  if (sort === 'price_desc') orderBy = { price: 'desc' };
+  if (sort === 'latest') orderBy = { createdAt: 'desc' };
+
+  //DB QUERIES
+  const [products, total] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy,
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        discountPrice: true,
+        brand: true,
+        stock: true,
+        slug: true,
+
+        images: {
+          orderBy: [{ isPrimary: 'desc' }, { position: 'asc' }],
+          take: 2,
+          select: {
+            imageUrl: true,
+            isPrimary: true,
+          },
         },
       },
+    }),
+
+    prisma.product.count({ where }),
+  ]);
+
+  //RESPONSE
+  return {
+    products,
+    pagination: {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      hasNextPage: page * limit < total,
+      hasPrevPage: page > 1,
     },
-  });
+  };
 };
 
-export const getProductById = async (id: string) => {
+export const getProductBySlug = async (slug: string) => {
   const product = await prisma.product.findUnique({
-    where: { id },
+    where: { slug },
     include: {
       images: { orderBy: { position: 'asc' } },
       category: true,

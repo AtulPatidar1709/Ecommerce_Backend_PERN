@@ -2,9 +2,9 @@ import { Router } from 'express';
 import {
   createProductController,
   getAllProductsController,
-  getProductByIdController,
   updateProductController,
   deleteProductController,
+  getProductBySlugController,
 } from './product.controller';
 import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
 import isAdmin from '../middlewares/auth_middlewares/isAdmin';
@@ -15,9 +15,11 @@ const router = Router();
 
 // Public
 router.get('/', getAllProductsController);
+
 //must be before any :id route, summary express think it like id.
 router.get('/summary', getProductSummaryController);
-router.get('/:id', getProductByIdController);
+
+router.get('/:slug', getProductBySlugController);
 
 // Admin
 router.post(

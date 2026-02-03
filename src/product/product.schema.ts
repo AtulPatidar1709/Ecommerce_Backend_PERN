@@ -24,6 +24,7 @@ export const createProductSchema = z.object({
     )
     .min(4, 'At least 3 images are required'),
   primaryIndex: z.number().min(0, 'Invalid primary index'),
+  slug: z.string(),
 });
 
 export const updateProductSchema = createProductSchema.partial();

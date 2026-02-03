@@ -49,7 +49,7 @@ export const getAllProductsController = async (
   next: NextFunction,
 ) => {
   try {
-    const products = await productService.getAllProducts();
+    const products = await productService.getAllProducts;
     console.log('Products Details. ', products);
     res.status(200).json({ success: true, products: products });
   } catch (err) {
@@ -57,14 +57,14 @@ export const getAllProductsController = async (
   }
 };
 
-export const getProductByIdController = async (
+export const getProductBySlugController = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const id = req.params.id as string;
-    const product = await productService.getProductById(id);
+    const slug = req.params.slug as string;
+    const product = await productService.getProductBySlug(slug);
     res.status(200).json({ success: true, product: product });
   } catch (err) {
     next(err);
