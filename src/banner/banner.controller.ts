@@ -5,6 +5,11 @@ import {
   getBannerSchema,
 } from './banner.schema';
 import * as bannerService from './banner.service';
+import {
+  getFiles,
+  uploadImages,
+  validateFiles,
+} from '../product/helper/controller.helper';
 
 export const createBannerController = async (
   req: Request,
@@ -12,8 +17,25 @@ export const createBannerController = async (
   next: NextFunction,
 ) => {
   try {
-    const data = createBannerSchema.parse(req.body);
-    const result = await bannerService.createBanner(data);
+    const files = getFiles(req);
+
+    console.log('files length ', files.length);
+
+    validateFiles(files, 1);
+
+    const imgUrls = await uploadImages(files);
+
+    console.log('ImageUrls ', imgUrls);
+
+    let data = req.body;
+
+    const dataWithImageUrl = { ...data, imageUrl: imgUrls[0] };
+
+    data = createBannerSchema.parse(dataWithImageUrl);
+
+    console.log('dataWithImageUrl is ', dataWithImageUrl);
+
+    const result = await bannerService.createBanner(dataWithImageUrl);
     res.status(201).json(result);
   } catch (error) {
     next(error);

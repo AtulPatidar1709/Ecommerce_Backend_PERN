@@ -11,7 +11,7 @@ export const createCategorySchema = z.object({
       /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
       'Slug must contain only lowercase letters, numbers, and hyphens',
     ),
-  imageUrl: z.url('Invalid image URL').optional(),
+  imageUrl: z.string('Invalid Image URL').optional(),
 });
 
 export const updateCategorySchema = createCategorySchema.partial();

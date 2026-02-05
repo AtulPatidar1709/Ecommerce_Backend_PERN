@@ -6,6 +6,7 @@ export const createBanner = async (data: CreateBannerInput) => {
   const banner = await prisma.banner.create({
     data: {
       title: data.title,
+      description: data.description,
       imageUrl: data.imageUrl,
       linkUrl: data.linkUrl,
     },
@@ -14,7 +15,7 @@ export const createBanner = async (data: CreateBannerInput) => {
   return {
     success: true,
     message: 'Banner created successfully',
-    data: banner,
+    banner: banner,
   };
 };
 
@@ -29,7 +30,7 @@ export const getAllBanners = async (isActive?: boolean) => {
   return {
     success: true,
     message: 'Banners fetched successfully',
-    data: banners,
+    banners: banners,
     count: banners.length,
   };
 };
@@ -43,7 +44,7 @@ export const getActiveBanners = async () => {
   return {
     success: true,
     message: 'Active banners fetched successfully',
-    data: banners,
+    banners: banners,
     count: banners.length,
   };
 };
@@ -60,7 +61,7 @@ export const getBannerById = async (bannerId: string) => {
   return {
     success: true,
     message: 'Banner fetched successfully',
-    data: banner,
+    banner: banner,
   };
 };
 
@@ -88,7 +89,7 @@ export const updateBanner = async (
   return {
     success: true,
     message: 'Banner updated successfully',
-    data: banner,
+    banner: banner,
   };
 };
 
@@ -109,7 +110,7 @@ export const toggleBannerStatus = async (bannerId: string) => {
   return {
     success: true,
     message: `Banner ${banner.isActive ? 'activated' : 'deactivated'} successfully`,
-    data: banner,
+    banner: banner,
   };
 };
 

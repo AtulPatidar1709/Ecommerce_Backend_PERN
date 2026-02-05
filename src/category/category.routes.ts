@@ -10,6 +10,7 @@ import {
 } from './category.controller';
 import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
 import isAdmin from '../middlewares/auth_middlewares/isAdmin';
+import { upload } from '../product/middlewares';
 
 const router = Router();
 
@@ -19,7 +20,13 @@ router.get('/slug/:slug', getCategoryBySlugController);
 router.get('/:id', getCategoryByIdController);
 
 // Admin routes
-router.post('/', requireAuth, isAdmin, createCategoryController);
+router.post(
+  '/',
+  requireAuth,
+  isAdmin,
+  upload.array('imageUrl', 1),
+  createCategoryController,
+);
 router.put('/:id', requireAuth, isAdmin, updateCategoryController);
 router.patch(
   '/:id/toggle-status',

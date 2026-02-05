@@ -10,6 +10,7 @@ import {
 } from './banner.controller';
 import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
 import isAdmin from '../middlewares/auth_middlewares/isAdmin';
+import { upload } from '../product/middlewares';
 
 const router = Router();
 
@@ -19,7 +20,13 @@ router.get('/:id', getBannerByIdController);
 
 // Admin routes
 router.get('/', requireAuth, isAdmin, getAllBannersController);
-router.post('/', requireAuth, isAdmin, createBannerController);
+router.post(
+  '/',
+  requireAuth,
+  isAdmin,
+  upload.array('imageUrl', 1),
+  createBannerController,
+);
 router.put('/:id', requireAuth, isAdmin, updateBannerController);
 router.patch(
   '/:id/toggle-status',

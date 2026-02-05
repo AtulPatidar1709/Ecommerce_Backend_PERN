@@ -5,9 +5,14 @@ export const createBannerSchema = z.object({
     .string()
     .min(2, 'Banner title must be at least 2 characters')
     .max(100, 'Banner title must not exceed 100 characters')
-    .uppercase(),
-  imageUrl: z.url({ message: 'Invalid image URL' }),
-  linkUrl: z.url('Invalid link URL').optional(),
+    .transform((val) => val.toUpperCase()),
+  imageUrl: z.string({ message: 'Invalid image URL' }),
+  description: z
+    .string()
+    .min(5, 'Banner description must be at least 5 characters')
+    .max(500, 'Banner description must not exceed 500 characters')
+    .optional(),
+  linkUrl: z.string({ message: 'Invalid link URL' }).optional(),
 });
 
 export const updateBannerSchema = createBannerSchema.partial();

@@ -6,6 +6,7 @@ import {
   processUpdateImages,
   validateCategory,
 } from './helper/helper';
+import slugify from './helper/slugify';
 import {
   CreateProductInput,
   GetAllProductsQueryInputType,
@@ -31,6 +32,7 @@ export const createProduct = async (data: CreateProductInput) => {
           position: index,
         })),
       },
+      slug: slugify(data.title),
     },
     include: {
       images: true,

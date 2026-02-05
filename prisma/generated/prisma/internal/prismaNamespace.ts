@@ -1930,6 +1930,7 @@ export const BannerScalarFieldEnum = {
   title: 'title',
   imageUrl: 'imageUrl',
   linkUrl: 'linkUrl',
+  description: 'description',
   isActive: 'isActive',
   createdAt: 'createdAt'
 } as const

@@ -6,6 +6,11 @@ import {
 } from './category.schema';
 import * as categoryService from './category.service';
 import { AppError } from '../utils/AppError';
+import {
+  getFiles,
+  uploadImages,
+  validateFiles,
+} from '../product/helper/controller.helper';
 
 export const createCategoryController = async (
   req: Request,
@@ -13,8 +18,24 @@ export const createCategoryController = async (
   next: NextFunction,
 ) => {
   try {
-    const data = createCategorySchema.parse(req.body);
+    const files = getFiles(req);
+
+    console.log('files length ', files.length);
+
+    validateFiles(files, 1);
+
+    const imgUrls = await uploadImages(files);
+
+    console.log('ImageUrls ', imgUrls);
+
+    let data = req.body;
+
+    data.imageUrl = imgUrls[0];
+
+    data = createCategorySchema.parse(data);
+
     const result = await categoryService.createCategory(data);
+
     res.status(201).json(result);
   } catch (error) {
     next(error);
