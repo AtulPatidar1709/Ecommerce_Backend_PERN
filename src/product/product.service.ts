@@ -6,7 +6,11 @@ import {
   processUpdateImages,
   validateCategory,
 } from './helper/helper';
-import { CreateProductInput, UpdateProductInput } from './product.schema';
+import {
+  CreateProductInput,
+  GetAllProductsQueryInputType,
+  UpdateProductInput,
+} from './product.schema';
 
 export const createProduct = async (data: CreateProductInput) => {
   await validateCategory(data.categoryId);
@@ -37,17 +41,6 @@ export const createProduct = async (data: CreateProductInput) => {
   return product;
 };
 
-interface GetAllProductsParams {
-  search?: string;
-  brand?: string[];
-  minPrice?: number;
-  maxPrice?: number;
-  rating?: number;
-  page?: number;
-  limit?: number;
-  sort?: 'price_asc' | 'price_desc' | 'latest';
-}
-
 export const getAllProducts = async ({
   search,
   brand,
@@ -57,7 +50,7 @@ export const getAllProducts = async ({
   page = 1,
   limit = 12,
   sort,
-}: GetAllProductsParams) => {
+}: GetAllProductsQueryInputType) => {
   //FILTERS
   const where: any = {
     isActive: true,

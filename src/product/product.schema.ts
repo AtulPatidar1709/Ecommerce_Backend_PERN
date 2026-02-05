@@ -1,5 +1,24 @@
 import { z } from 'zod';
 
+export const getAllProductsQuerySchema = z.object({
+  search: z.string().optional(),
+
+  brand: z
+    .string()
+    .transform((v) => v.split(','))
+    .optional(),
+
+  minPrice: z.coerce.number().min(0).optional(),
+  maxPrice: z.coerce.number().min(0).optional(),
+
+  rating: z.coerce.number().min(1).max(5).optional(),
+
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(50).default(12),
+
+  sort: z.enum(['price_asc', 'price_desc', 'latest']).optional(),
+});
+
 export const createProductSchema = z.object({
   title: z.string().min(3, 'Title must be at least 3 characters'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
@@ -31,3 +50,6 @@ export const updateProductSchema = createProductSchema.partial();
 
 export type CreateProductInput = z.infer<typeof createProductSchema>;
 export type UpdateProductInput = z.infer<typeof updateProductSchema>;
+export type GetAllProductsQueryInputType = z.infer<
+  typeof getAllProductsQuerySchema
+>;

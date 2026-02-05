@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import * as productService from './product.service';
-import { updateProductSchema } from './product.schema';
+import {
+  getAllProductsQuerySchema,
+  updateProductSchema,
+} from './product.schema';
 import { AppError } from '../utils/AppError';
 import {
   getFiles,
@@ -49,7 +52,8 @@ export const getAllProductsController = async (
   next: NextFunction,
 ) => {
   try {
-    const products = await productService.getAllProducts;
+    const parsedQuery = getAllProductsQuerySchema.parse(req.query);
+    const products = await productService.getAllProducts(parsedQuery);
     console.log('Products Details. ', products);
     res.status(200).json({ success: true, products: products });
   } catch (err) {
