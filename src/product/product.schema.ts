@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const getAllProductsQuerySchema = z.object({
   search: z.string().optional(),
 
-  brand: z
+  category: z
     .string()
     .transform((v) => v.split(','))
     .optional(),
@@ -31,7 +31,7 @@ export const createProductSchema = z.object({
     .number()
     .int('Stock must be a whole number')
     .min(0, 'Stock cannot be negative'),
-  brand: z.string().optional(),
+  category: z.string().optional(),
   categoryId: z.uuid('Invalid category ID format'),
   images: z
     .array(

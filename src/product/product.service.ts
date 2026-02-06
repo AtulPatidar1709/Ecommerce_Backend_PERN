@@ -45,7 +45,7 @@ export const createProduct = async (data: CreateProductInput) => {
 
 export const getAllProducts = async ({
   search,
-  brand,
+  category,
   minPrice,
   maxPrice,
   rating,
@@ -65,9 +65,12 @@ export const getAllProducts = async ({
     };
   }
 
-  if (brand?.length) {
-    where.brand = {
-      in: brand,
+  if (category?.length) {
+    where.category = {
+      name: {
+        in: category,
+        mode: 'insensitive',
+      },
     };
   }
 
@@ -77,7 +80,7 @@ export const getAllProducts = async ({
     if (maxPrice) where.price.lte = maxPrice;
   }
 
-  if (rating) {
+  if (rating !== undefined) {
     where.rating = {
       gte: rating,
     };
@@ -105,10 +108,14 @@ export const getAllProducts = async ({
         title: true,
         price: true,
         discountPrice: true,
-        brand: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
         stock: true,
         slug: true,
-
         images: {
           orderBy: [{ isPrimary: 'desc' }, { position: 'asc' }],
           take: 2,
@@ -172,7 +179,7 @@ export const updateProduct = async (id: string, data: UpdateProductInput) => {
   return prisma.product.update({
     where: { id },
     data: {
-      ...data, // title, price, stock, etc.
+      ...data,
       images: imagesData,
     },
     include: { images: true },
