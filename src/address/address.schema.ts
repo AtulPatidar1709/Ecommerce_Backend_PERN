@@ -2,11 +2,20 @@ import { z } from 'zod';
 import { nameField, phoneField } from '../types/common/fields.schema';
 
 export const createAddressSchema = z.object({
-  name: nameField,
+  name: nameField.transform((val) => val.toUpperCase()),
   phone: phoneField,
-  street: z.string().min(3, 'Street address is required').toLowerCase(),
-  city: z.string().min(2, 'City is required').toLowerCase(),
-  state: z.string().min(2, 'State is required').toLowerCase(),
+  street: z
+    .string()
+    .min(3, 'Street address is required')
+    .transform((val) => val.toUpperCase()),
+  city: z
+    .string()
+    .min(2, 'City is required')
+    .transform((val) => val.toUpperCase()),
+  state: z
+    .string()
+    .min(2, 'State is required')
+    .transform((val) => val.toUpperCase()),
   pincode: z
     .string()
     .min(5, 'Pincode must be at least 5 digits')
@@ -14,9 +23,9 @@ export const createAddressSchema = z.object({
   country: z
     .string()
     .min(2, 'Country is required')
-    .toUpperCase()
     .optional()
-    .default('INDIA'),
+    .default('INDIA')
+    .transform((val) => val.toUpperCase()),
 });
 
 export const updateAddressSchema = createAddressSchema.partial();

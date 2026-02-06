@@ -36,7 +36,6 @@ export const createAddress = async (
 };
 
 export const getAllAddresses = async (userId: string) => {
-  
   const addresses = await prisma.address.findMany({
     where: { userId },
     orderBy: { id: 'asc' },
@@ -45,7 +44,7 @@ export const getAllAddresses = async (userId: string) => {
   return {
     success: true,
     message: 'Addresses fetched successfully',
-    data: addresses,
+    addresses: addresses,
     count: addresses.length,
   };
 };
@@ -65,7 +64,7 @@ export const getAddressById = async (userId: string, addressId: string) => {
   return {
     success: true,
     message: 'Address fetched successfully',
-    data: address,
+    address: address,
   };
 };
 

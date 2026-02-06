@@ -1,12 +1,16 @@
 import { z } from 'zod';
 
 export const getAllProductsQuerySchema = z.object({
-  search: z.string().optional(),
+  search: z
+    .string()
+    .optional()
+    .transform((val) => val?.toUpperCase()),
 
   category: z
     .string()
     .transform((v) => v.split(','))
-    .optional(),
+    .optional()
+    .transform((val) => val?.map((v) => v.toUpperCase())),
 
   minPrice: z.coerce.number().min(0).optional(),
   maxPrice: z.coerce.number().min(0).optional(),

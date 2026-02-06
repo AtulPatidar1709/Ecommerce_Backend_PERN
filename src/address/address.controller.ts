@@ -14,11 +14,12 @@ export const createAddressController = async (
 ) => {
   try {
     const userId = req.user?.id;
+
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
 
-    const data = createAddressSchema.parse(req.body);
+    const data = createAddressSchema.parse(req.body.data);
     const result = await addressService.createAddress(userId, data);
     res.status(201).json(result);
   } catch (error) {

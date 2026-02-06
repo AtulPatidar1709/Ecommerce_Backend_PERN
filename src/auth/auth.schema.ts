@@ -25,7 +25,7 @@ export const sendOtpSchema = z.object({
 });
 
 export const registerSchema = verifiCationTypeSchema.extend({
-  name: nameField,
+  name: nameField.transform((val) => val.toUpperCase()),
   password: passField,
 });
 

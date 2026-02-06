@@ -7,8 +7,7 @@ const userIdField = z.uuid({
 const nameField = z
   .string()
   .min(2, 'First name must be at least 2 characters')
-  .max(50, 'First name must not exceed 50 characters')
-  .toUpperCase();
+  .max(50, 'First name must not exceed 50 characters');
 
 const phoneField = z
   .string()
