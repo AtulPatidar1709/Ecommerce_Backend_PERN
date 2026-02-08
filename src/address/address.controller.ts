@@ -6,6 +6,7 @@ import {
 } from './address.schema';
 import * as addressService from './address.service';
 import { AppError } from '../utils/AppError';
+import { prisma } from '../config/prisma';
 
 export const createAddressController = async (
   req: Request,
@@ -59,6 +60,12 @@ export const getAddressByIdController = async (
     const { addressId } = getAddressSchema.parse({
       addressId: req.params.addressId,
     });
+
+    const orderExsists = await prisma.order.findFirst({ where: { addressId } });
+
+    if (orderExsists) {
+      throw new AppError('Address not found', 404);
+    }
     const result = await addressService.getAddressById(userId, addressId);
     res.status(200).json(result);
   } catch (error) {
@@ -102,6 +109,24 @@ export const deleteAddressController = async (
     const { addressId } = getAddressSchema.parse({
       addressId: req.params.addressId,
     });
+
+    const orderExsists = await prisma.order.findFirst({
+      where: {
+        addressId,
+        userId,
+        status: {
+          notIn: ['DELIVERED', 'CANCELLED'],
+        },
+      },
+    });
+
+    if (orderExsists) {
+      throw new AppError(
+        'Address is associated with an order and cannot be deleted',
+        400,
+      );
+    }
+
     const result = await addressService.deleteAddress(userId, addressId);
     res.status(200).json(result);
   } catch (error) {
