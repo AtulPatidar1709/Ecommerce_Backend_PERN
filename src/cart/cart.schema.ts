@@ -14,12 +14,12 @@ export const addToCartSchema = z.object({
   quantity: quantitySchema,
 });
 
-export const updateCartItemSchema = z.object({
-  quantity: quantitySchema,
-});
-
 export const removeFromCartSchema = z.object({
   productId: productIdSchema,
+});
+
+export const updateCartItemSchema = removeFromCartSchema.extend({
+  quantity: quantitySchema,
 });
 
 // Type inference

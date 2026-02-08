@@ -43,11 +43,16 @@ export const updateCartItemController = async (
 ) => {
   try {
     const userId = getUserIdFromRequest(req);
-    const { productId } = removeFromCartSchema.parse({
+    const data = {
+      quantity: parseInt(req.body.quantity),
       productId: req.params.productId,
-    });
-    const data = updateCartItemSchema.parse(req.body);
-    const result = await cartService.updateCartItem(userId, productId, data);
+    };
+    const parsedData = updateCartItemSchema.parse(data);
+    const result = await cartService.updateCartItem(
+      userId,
+      parsedData.productId,
+      parsedData.quantity,
+    );
     res.status(200).json(result);
   } catch (error) {
     next(error);

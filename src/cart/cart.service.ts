@@ -1,6 +1,6 @@
 import { prisma } from '../config/prisma';
 import { AppError } from '../utils/AppError';
-import { AddToCartInput, UpdateCartItemInput } from './cart.schema';
+import { AddToCartInput } from './cart.schema';
 
 export const addToCart = async (userId: string, data: AddToCartInput) => {
   // Verify product exists and has stock
@@ -24,12 +24,12 @@ export const addToCart = async (userId: string, data: AddToCartInput) => {
         productId: data.productId,
       },
     },
-    include: { product: true },
+    // include: { product: true },
   });
 
   if (existingItem) {
     // Update quantity if item exists
-    const newQuantity = existingItem.quantity + data.quantity;
+    const newQuantity = data.quantity;
 
     if (newQuantity > product.stock) {
       throw new AppError('Insufficient stock for this quantity', 400);
@@ -43,7 +43,7 @@ export const addToCart = async (userId: string, data: AddToCartInput) => {
         },
       },
       data: { quantity: newQuantity },
-      include: { product: true },
+      // include: { product: true },
     });
 
     return {
@@ -60,21 +60,37 @@ export const addToCart = async (userId: string, data: AddToCartInput) => {
       productId: data.productId,
       quantity: data.quantity,
     },
-    include: { product: true },
+    // include: { product: true },
   });
 
   return {
     success: true,
     message: 'Product added to cart',
-    data: cartItem,
+    cartItem: cartItem,
   };
 };
 
 export const getCartItems = async (userId: string) => {
   const cartItems = await prisma.cartItem.findMany({
     where: { userId },
-    include: { product: true },
     orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      quantity: true,
+      productId: true,
+      product: {
+        select: {
+          title: true,
+          price: true,
+          discountPrice: true,
+          images: {
+            select: {
+              imageUrl: true,
+            },
+          },
+        },
+      },
+    },
   });
 
   // Add subtotal for each item and calculate cart totals
@@ -97,7 +113,7 @@ export const getCartItems = async (userId: string) => {
   return {
     success: true,
     message: 'Cart items fetched successfully',
-    data: cartItemsWithSubtotal,
+    cartItems: cartItemsWithSubtotal,
     summary,
   };
 };
@@ -105,7 +121,7 @@ export const getCartItems = async (userId: string) => {
 export const updateCartItem = async (
   userId: string,
   productId: string,
-  data: UpdateCartItemInput,
+  quantity: number,
 ) => {
   // Verify cart item exists and belongs to user
   const cartItem = await prisma.cartItem.findFirst({
@@ -121,7 +137,7 @@ export const updateCartItem = async (
   }
 
   // Check if product has enough stock
-  if (cartItem.product.stock < data.quantity) {
+  if (cartItem.product.stock < quantity) {
     throw new AppError('Insufficient stock for requested quantity', 400);
   }
 
@@ -132,14 +148,14 @@ export const updateCartItem = async (
         productId,
       },
     },
-    data: { quantity: data.quantity },
+    data: { quantity },
     include: { product: true },
   });
 
   return {
     success: true,
     message: 'Cart item updated successfully',
-    data: updatedItem,
+    cartItem: updatedItem,
   };
 };
 
