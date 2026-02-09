@@ -86,6 +86,8 @@ export const validateCoupon = async (
     where: { code: data.code },
   });
 
+  console.log('coupon details ', coupon);
+
   if (!coupon) {
     throw new AppError('Invalid coupon code', 404);
   }
@@ -130,7 +132,7 @@ export const validateCoupon = async (
   return {
     success: true,
     message: 'Coupon is valid',
-    data: {
+    couponData: {
       couponId: coupon.id,
       code: coupon.code,
       discountAmount,

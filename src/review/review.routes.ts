@@ -17,18 +17,15 @@ const router = Router();
 router.get('/product/:productId', getReviewsByProductIdController);
 router.get('/:id', getReviewByIdController);
 
+router.use(requireAuth);
+
 // User routes (authenticated)
-router.post('/', requireAuth, createReviewController);
-router.get('/', requireAuth, getUserReviewsController);
-router.put('/:id', requireAuth, updateReviewController);
-router.delete('/:id', requireAuth, deleteReviewController);
+router.post('/', createReviewController);
+router.get('/', getUserReviewsController);
+router.put('/:id', updateReviewController);
+router.delete('/:id', deleteReviewController);
 
 // Admin routes
-router.delete(
-  '/:id/admin',
-  requireAuth,
-  isAdmin,
-  deleteReviewByAdminController,
-);
+router.delete('/:id/admin', isAdmin, deleteReviewByAdminController);
 
 export default router;

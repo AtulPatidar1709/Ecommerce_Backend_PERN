@@ -11,13 +11,15 @@ import isAdmin from '../middlewares/auth_middlewares/isAdmin';
 
 const router = Router();
 
+router.use(requireAuth);
+
 // User routes (authenticated)
-router.post('/', requireAuth, createOrderReturnController);
-router.get('/', requireAuth, getUserOrderReturnsController);
-router.get('/:id', requireAuth, getOrderReturnByIdController);
+router.post('/', createOrderReturnController);
+router.get('/', getUserOrderReturnsController);
+router.get('/:id', getOrderReturnByIdController);
 
 // Admin routes
-router.get('/all', requireAuth, isAdmin, getAllOrderReturnsController);
-router.patch('/:id', requireAuth, isAdmin, updateOrderReturnController);
+router.get('/all', isAdmin, getAllOrderReturnsController);
+router.patch('/:id', isAdmin, updateOrderReturnController);
 
 export default router;

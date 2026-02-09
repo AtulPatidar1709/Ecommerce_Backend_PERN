@@ -89,8 +89,8 @@ export const refreshTokenController = async (
 ) => {
   try {
     const { refreshToken } = req.signedCookies;
-    const result = await authService.refreshToken(refreshToken);
-    res.cookie('accessToken', result.accessToken, {
+    const { accessToken } = await authService.refreshToken(refreshToken);
+    res.cookie('accessToken', accessToken, {
       httpOnly: true,
       signed: true,
       secure: config.environment === 'production',

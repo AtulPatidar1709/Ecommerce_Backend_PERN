@@ -13,15 +13,17 @@ import isAdmin from '../middlewares/auth_middlewares/isAdmin';
 
 const router = Router();
 
+router.use(requireAuth);
+
 // User routes (authenticated)
-router.get('/profile', requireAuth, getUserProfileController);
-router.put('/profile', requireAuth, updateProfileController);
-router.post('/change-password', requireAuth, changePasswordController);
-router.get('/stats', requireAuth, getUserStatsController);
-router.post('/deactivate', requireAuth, deactivateAccountController);
+router.get('/profile', getUserProfileController);
+router.put('/profile', updateProfileController);
+router.post('/change-password', changePasswordController);
+router.get('/stats', getUserStatsController);
+router.post('/deactivate', deactivateAccountController);
 
 // Admin routes
-router.get('/', requireAuth, isAdmin, getAllUsersController);
-router.get('/:id', requireAuth, isAdmin, getUserByIdController);
+router.get('/', isAdmin, getAllUsersController);
+router.get('/:id', isAdmin, getUserByIdController);
 
 export default router;

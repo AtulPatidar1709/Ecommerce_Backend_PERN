@@ -12,19 +12,16 @@ import isAdmin from '../middlewares/auth_middlewares/isAdmin';
 
 const router = Router();
 
+router.use(requireAuth);
+
 // User routes (authenticated)
-router.post('/', requireAuth, initiatePaymentController);
-router.get('/order/:orderId', requireAuth, getPaymentByOrderIdController);
-router.get('/:id', requireAuth, getPaymentByIdController);
-router.post('/verify/razorpay', requireAuth, verifyRazorpayPaymentController);
+router.post('/', initiatePaymentController);
+router.get('/order/:orderId', getPaymentByOrderIdController);
+router.get('/:id', getPaymentByIdController);
+router.post('/verify/razorpay', verifyRazorpayPaymentController);
 
 // Admin routes
-router.get('/', requireAuth, isAdmin, getAllPaymentsController);
-router.patch(
-  '/:id/status',
-  requireAuth,
-  isAdmin,
-  updatePaymentStatusController,
-);
+router.get('/', isAdmin, getAllPaymentsController);
+router.patch('/:id/status', isAdmin, updatePaymentStatusController);
 
 export default router;

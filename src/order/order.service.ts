@@ -99,6 +99,7 @@ const applyCoupon = async (
 };
 
 export const createOrder = async (userId: string, data: CreateOrderInput) => {
+  
   await validateUserAddress(userId, data.addressId);
 
   const { totalAmount } = await validateProducts(data.cartItems);

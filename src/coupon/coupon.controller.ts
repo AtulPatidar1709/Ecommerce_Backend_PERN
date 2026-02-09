@@ -6,7 +6,7 @@ import {
   getCouponSchema,
 } from './coupon.schema';
 import * as couponService from './coupon.service';
-import { AppError } from '../utils/AppError';
+import { getUserId } from '../auth/helper/helper';
 
 export const createCouponController = async (
   req: Request,
@@ -61,12 +61,11 @@ export const validateCouponController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new AppError('User ID not found', 401);
-    }
+    const userId = getUserId(req);
 
     const data = validateCouponSchema.parse(req.body);
+
+    console.log('Validating coupon with data:', data);
     const result = await couponService.validateCoupon(userId, data);
     res.status(200).json(result);
   } catch (error) {

@@ -13,20 +13,17 @@ import isAdmin from '../middlewares/auth_middlewares/isAdmin';
 
 const router = Router();
 
+router.use(requireAuth);
+
 // User routes
-router.post('/validate', requireAuth, validateCouponController);
+router.post('/validate', validateCouponController);
 
 // Admin routes
-router.get('/', requireAuth, isAdmin, getAllCouponsController);
-router.get('/:id', requireAuth, isAdmin, getCouponByIdController);
-router.post('/', requireAuth, isAdmin, createCouponController);
-router.put('/:id', requireAuth, isAdmin, updateCouponController);
-router.patch(
-  '/:id/toggle-status',
-  requireAuth,
-  isAdmin,
-  toggleCouponStatusController,
-);
-router.delete('/:id', requireAuth, isAdmin, deleteCouponController);
+router.get('/', isAdmin, getAllCouponsController);
+router.get('/:id', isAdmin, getCouponByIdController);
+router.post('/', isAdmin, createCouponController);
+router.put('/:id', isAdmin, updateCouponController);
+router.patch('/:id/toggle-status', isAdmin, toggleCouponStatusController);
+router.delete('/:id', isAdmin, deleteCouponController);
 
 export default router;

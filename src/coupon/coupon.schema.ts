@@ -41,7 +41,10 @@ export const updateCouponSchema = baseCouponSchema.partial();
 
 /* ---------------- OTHER SCHEMAS ---------------- */
 export const validateCouponSchema = z.object({
-  code: z.string().trim().toUpperCase(),
+  code: z
+    .string()
+    .trim()
+    .transform((val) => val.toUpperCase()),
   orderAmount: z.number().positive('Order amount must be greater than 0'),
 });
 

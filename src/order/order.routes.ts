@@ -4,23 +4,21 @@ import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
 
 const router = Router();
 
+router.use(requireAuth);
+
 // Create order
-router.post('/', requireAuth, orderController.createOrderController);
+router.post('/', orderController.createOrderController);
 
 // Get user's orders with pagination and filtering
-router.get('/', requireAuth, orderController.getUserOrdersController);
+router.get('/', orderController.getUserOrdersController);
 
 // Get specific order details
-router.get('/:id', requireAuth, orderController.getOrderByIdController);
+router.get('/:id', orderController.getOrderByIdController);
 
 // Cancel order (user action)
-router.patch('/:id/cancel', requireAuth, orderController.cancelOrderController);
+router.patch('/:id/cancel', orderController.cancelOrderController);
 
 // Update order status (admin action)
-router.patch(
-  '/:id/status',
-  requireAuth,
-  orderController.updateOrderStatusController,
-);
+router.patch('/:id/status', orderController.updateOrderStatusController);
 
 export default router;

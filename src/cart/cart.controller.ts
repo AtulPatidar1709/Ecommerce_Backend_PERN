@@ -5,7 +5,7 @@ import {
   removeFromCartSchema,
 } from './cart.schema';
 import * as cartService from './cart.service';
-import { getUserIdFromRequest } from './cart.helpers';
+import { getUserId } from '../auth/helper/helper';
 
 export const addToCartController = async (
   req: Request,
@@ -13,7 +13,7 @@ export const addToCartController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = getUserIdFromRequest(req);
+    const userId = getUserId(req);
     const data = addToCartSchema.parse(req.body);
     const result = await cartService.addToCart(userId, data);
     res.status(201).json(result);
@@ -28,7 +28,7 @@ export const getCartItemsController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = getUserIdFromRequest(req);
+    const userId = getUserId(req);
     const result = await cartService.getCartItems(userId);
     res.status(200).json(result);
   } catch (error) {
@@ -42,7 +42,7 @@ export const updateCartItemController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = getUserIdFromRequest(req);
+    const userId = getUserId(req);
     const data = {
       quantity: parseInt(req.body.quantity),
       productId: req.params.productId,
@@ -65,7 +65,7 @@ export const removeFromCartController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = getUserIdFromRequest(req);
+    const userId = getUserId(req);
     const { productId } = removeFromCartSchema.parse({
       productId: req.params.productId,
     });
@@ -82,7 +82,7 @@ export const clearCartController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = getUserIdFromRequest(req);
+    const userId = getUserId(req);
     const result = await cartService.clearCart(userId);
     res.status(200).json(result);
   } catch (error) {
