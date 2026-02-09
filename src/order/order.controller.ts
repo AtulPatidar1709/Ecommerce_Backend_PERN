@@ -15,7 +15,8 @@ export const createOrderController = async (
 ) => {
   try {
     const userId = getUserId(req);
-    const data = createOrderSchema.parse(req.body);
+    console.log('Request body:', req.body.data);
+    const data = createOrderSchema.parse(req.body.data);
     const order = await orderService.createOrder(userId, data);
 
     res.status(201).json({
@@ -40,7 +41,7 @@ export const getUserOrdersController = async (
 
     res.status(200).json({
       success: true,
-      data: result.orders,
+      orders: result.orders,
       pagination: result.pagination,
     });
   } catch (err) {
@@ -61,7 +62,7 @@ export const getOrderByIdController = async (
 
     res.status(200).json({
       success: true,
-      data: order,
+      orderDetails: order,
     });
   } catch (err) {
     next(err);

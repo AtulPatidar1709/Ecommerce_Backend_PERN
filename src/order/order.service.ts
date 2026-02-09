@@ -1,11 +1,11 @@
 import { prisma } from '../config/prisma';
 import { AppError } from '../utils/AppError';
 import {
-  CreateOrderInput,
   GetOrderByIdInput,
   GetOrdersQuery,
   UpdateOrderStatusInput,
 } from './oder.schema';
+// ✅ Validate products using only cartItem IDs
 
 const validateUserAddress = async (userId: string, addressId: string) => {
   const address = await prisma.address.findUnique({
@@ -17,23 +17,28 @@ const validateUserAddress = async (userId: string, addressId: string) => {
   }
 };
 
-const validateProducts = async (
-  items: CreateOrderInput['cartItems'],
-): Promise<{ productMap: Map<string, number>; totalAmount: number }> => {
-  const productMap = new Map<string, number>();
-
-  const products = await prisma.product.findMany({
-    where: { id: { in: items.map((item) => item.productId) } },
+const validateProductsByCart = async (
+  userId: string,
+): Promise<{
+  productMap: Map<string, [number, number]>;
+  totalAmount: number;
+}> => {
+  const cartItems = await prisma.cartItem.findMany({
+    where: { userId },
+    include: { product: true },
   });
 
-  if (products.length !== items.length) {
-    throw new AppError('One or more products not found', 404);
+  console.log('Cart Items:', cartItems); // Debugging log
+
+  if (cartItems.length === 0) {
+    throw new AppError('Cart is empty', 400);
   }
 
   let totalAmount = 0;
+  const productMap = new Map<string, [number, number]>(); // [quantity, price]
 
-  items.forEach((item) => {
-    const product = products.find((p) => p.id === item.productId);
+  cartItems.forEach((item) => {
+    const product = item.product;
 
     if (!product) {
       throw new AppError(`Product ${item.productId} not found`, 404);
@@ -46,15 +51,11 @@ const validateProducts = async (
       );
     }
 
-    if (product.price !== item.price) {
-      throw new AppError(
-        `Price mismatch for product ${product.title}. Current price: ${product.price}`,
-        400,
-      );
-    }
-
-    totalAmount += item.price * item.quantity;
-    productMap.set(item.productId, item.quantity);
+    totalAmount += (product.discountPrice ?? product.price) * item.quantity;
+    productMap.set(item.productId, [
+      item.quantity,
+      product.discountPrice ?? product.price,
+    ]);
   });
 
   return { productMap, totalAmount };
@@ -64,21 +65,12 @@ const applyCoupon = async (
   couponId: string | undefined,
   totalAmount: number,
 ) => {
-  if (!couponId) {
-    return { discountAmount: 0, finalAmount: totalAmount };
-  }
+  if (!couponId) return { discountAmount: 0, finalAmount: totalAmount };
 
-  const coupon = await prisma.coupon.findUnique({
-    where: { id: couponId },
-  });
+  const coupon = await prisma.coupon.findUnique({ where: { id: couponId } });
 
-  if (!coupon) {
-    throw new AppError('Coupon not found', 404);
-  }
-
-  if (!coupon.isActive) {
-    throw new AppError('Coupon is inactive', 400);
-  }
+  if (!coupon) throw new AppError('Coupon not found', 404);
+  if (!coupon.isActive) throw new AppError('Coupon is inactive', 400);
 
   if (coupon.minOrderAmount && totalAmount < coupon.minOrderAmount) {
     throw new AppError(
@@ -98,12 +90,18 @@ const applyCoupon = async (
   };
 };
 
-export const createOrder = async (userId: string, data: CreateOrderInput) => {
-  
+// ✅ Main createOrder function using only cart IDs
+export const createOrder = async (
+  userId: string,
+  data: { addressId: string; couponId?: string },
+) => {
+  // Validate user address
   await validateUserAddress(userId, data.addressId);
 
-  const { totalAmount } = await validateProducts(data.cartItems);
+  // Validate products and calculate total
+  const { totalAmount, productMap } = await validateProductsByCart(userId);
 
+  // Apply coupon
   const { discountAmount, finalAmount } = await applyCoupon(
     data.couponId,
     totalAmount,
@@ -111,15 +109,15 @@ export const createOrder = async (userId: string, data: CreateOrderInput) => {
 
   try {
     const order = await prisma.$transaction(async (tx) => {
-      await Promise.all(
-        data.cartItems.map((item) =>
-          tx.product.update({
-            where: { id: item.productId },
-            data: { stock: { decrement: item.quantity } },
-          }),
-        ),
-      );
+      // Decrement stock for all products
+      for (const [productId, quantity] of productMap.entries()) {
+        await tx.product.update({
+          where: { id: productId },
+          data: { stock: { decrement: quantity[0] } },
+        });
+      }
 
+      // Create order
       return tx.order.create({
         data: {
           userId,
@@ -128,11 +126,15 @@ export const createOrder = async (userId: string, data: CreateOrderInput) => {
           totalAmount: finalAmount,
           discountAmount,
           orderItems: {
-            create: data.cartItems.map((item) => ({
-              productId: item.productId,
-              price: item.price,
-              quantity: item.quantity,
-            })),
+            create: Array.from(productMap.entries()).map(
+              ([productId, quantity]) => {
+                return {
+                  productId,
+                  quantity: quantity[0] || 0,
+                  price: quantity[1] || 0, // save actual paid price
+                };
+              },
+            ),
           },
         },
         include: {
@@ -174,7 +176,13 @@ export const getUserOrders = async (userId: string, query: GetOrdersQuery) => {
         orderItems: {
           include: {
             product: {
-              select: { id: true, title: true, images: true },
+              select: {
+                id: true,
+                title: true,
+                images: true,
+                price: true,
+                discountPrice: true,
+              },
             },
           },
         },
@@ -207,13 +215,51 @@ export const getOrderById = async (
     where: { id: input.id },
     include: {
       orderItems: {
-        include: { product: true },
+        include: {
+          product: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              price: true,
+              discountPrice: true,
+              images: {
+                select: { imageUrl: true },
+              },
+            },
+          },
+        },
       },
-      address: true,
-      coupon: true,
-      payment: true,
-      cancellation: true,
-      return: true,
+      coupon: {
+        select: {
+          id: true,
+        },
+      },
+      payment: {
+        select: {
+          id: true,
+          status: true,
+          paymentMethod: true,
+        },
+      },
+      cancellation: {
+        select: {
+          id: true,
+          reason: true,
+          requestedAt: true,
+          status: true,
+          processedAt: true,
+        },
+      },
+      return: {
+        select: {
+          id: true,
+          reason: true,
+          requestedAt: true,
+          status: true,
+          processedAt: true,
+        },
+      },
       user: { select: { email: true, phone: true } },
     },
   });

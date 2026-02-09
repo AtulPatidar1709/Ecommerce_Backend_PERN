@@ -24,7 +24,6 @@ export const addToCart = async (userId: string, data: AddToCartInput) => {
         productId: data.productId,
       },
     },
-    // include: { product: true },
   });
 
   if (existingItem) {
@@ -43,7 +42,6 @@ export const addToCart = async (userId: string, data: AddToCartInput) => {
         },
       },
       data: { quantity: newQuantity },
-      // include: { product: true },
     });
 
     return {
@@ -77,9 +75,9 @@ export const getCartItems = async (userId: string) => {
     select: {
       id: true,
       quantity: true,
-      productId: true,
       product: {
         select: {
+          id: true,
           title: true,
           price: true,
           discountPrice: true,
