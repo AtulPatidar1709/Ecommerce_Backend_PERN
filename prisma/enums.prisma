@@ -16,13 +16,6 @@ enum OrderStatus {
   CANCELLED
 }
 
-enum PaymentStatus {
-  CREATED
-  SUCCESS
-  FAILED
-  REFUNDED
-}
-
 enum DiscountType {
   PERCENTAGE
   FLAT
@@ -33,6 +26,13 @@ enum RequestStatus {
   APPROVED
   REJECTED
   COMPLETED
+}
+
+enum PaymentStatus {
+  CREATED
+  SUCCESS
+  FAILED
+  REFUNDED
 }
 
 enum PaymentMethod {

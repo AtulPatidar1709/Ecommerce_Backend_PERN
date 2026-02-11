@@ -155,11 +155,10 @@ export const createOrder = async (
           orderId: orderData.id,
           amount: finalAmount,
           paymentMethod: data.paymentMethod ?? 'COD',
-          status: data.paymentMethod === 'RAZORPAY' ? 'SUCCESS' : 'CREATED',
+          status: data.paymentMethod === 'RAZORPAY' ? 'CREATED' : 'SUCCESS',
         },
       });
 
-      // Clear cart
       await tx.cartItem.deleteMany({
         where: { userId },
       });
@@ -225,18 +224,18 @@ export const createPendingOrder = async (
 };
 
 export const getUserOrders = async (userId: string, query: GetOrdersQuery) => {
-  const skip = (Number(query.page) - 1) * Number(query.limit);
-  const limit = Number(query.limit);
+  const skip = (query.page - 1) * query.limit;
+  const limit = query.limit;
 
   const whereClause = {
     userId,
     ...(query.status && { status: query.status }),
   };
 
-  // Run both queries in parallel
+  // // Run both queries in parallel
   const [orders, total] = await Promise.all([
     prisma.order.findMany({
-      where: whereClause,
+      where: { userId },
       skip,
       take: limit,
       orderBy: {
@@ -257,10 +256,42 @@ export const getUserOrders = async (userId: string, query: GetOrdersQuery) => {
             },
           },
         },
+        address: {
+          select: {
+            id: true,
+          },
+        },
       },
     }),
     prisma.order.count({ where: whereClause }),
   ]);
+
+  // const orders = await prisma.order.findMany({
+  //   where: { userId },
+  //   skip,
+  //   take: limit,
+  //   orderBy: {
+  //     [query.sortBy === 'totalAmount' ? 'totalAmount' : 'createdAt']:
+  //       query.order === 'asc' ? 'asc' : 'desc',
+  //   },
+  //   select: {
+  //     id: true,
+  //     status: true,
+  //     totalAmount: true,
+  //     createdAt: true,
+  //     orderItems: {
+  //       select: {
+  //         product: {
+  //           select: {
+  //             id: true,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   },
+  // });
+
+  // const total = await prisma.order.count({ where: whereClause });
 
   return {
     orders,
@@ -294,6 +325,13 @@ export const getOrderById = async (
               },
             },
           },
+        },
+      },
+      payment: {
+        select: {
+          status: true,
+          paymentMethod: true,
+          amount: true,
         },
       },
     },
