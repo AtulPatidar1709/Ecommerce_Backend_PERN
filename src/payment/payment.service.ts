@@ -1,21 +1,40 @@
+import Razorpay from 'razorpay';
 import { PaymentStatus } from '../../prisma/generated/prisma/enums';
 import { config } from '../config/config';
 import { prisma } from '../config/prisma';
+import { CreateOrderInput, createOrderSchema } from '../order/oder.schema';
+import {
+  createPendingOrder,
+  validateProductsByCart,
+} from '../order/order.service';
 import { AppError } from '../utils/AppError';
-import { InitiatePaymentInput } from './payment.schema';
 import crypto from 'crypto';
 
+const rzp = new Razorpay({
+  key_id: config.rzpTestApiKey!,
+  key_secret: config.rzpTestKeySecret!,
+});
+
+export const createRazorpayOrder = async (amount: number, orderId: string) => {
+  const options = {
+    amount: amount * 100, // Amount in paise
+    currency: 'INR',
+    notes: {
+      orderId: orderId.toString(),
+    },
+  };
+  const order = await rzp.orders.create(options);
+  return order;
+};
+
 export const initiatePayment = async (
-  userId: string,
-  data: InitiatePaymentInput,
+  user: { id: string; email: string; role: 'USER' | 'ADMIN' },
+  data: CreateOrderInput,
 ) => {
   // Verify order exists and belongs to user
-  const order = await prisma.order.findFirst({
-    where: {
-      id: data.orderId,
-      userId,
-    },
-  });
+  const parsedData = createOrderSchema.parse(data);
+
+  const order = await createPendingOrder(user.id, data);
 
   if (!order) {
     throw new AppError('Order not found', 404);
@@ -23,18 +42,24 @@ export const initiatePayment = async (
 
   // Check if payment already exists
   const existingPayment = await prisma.payment.findUnique({
-    where: { orderId: data.orderId },
+    where: { orderId: order.id },
   });
 
   if (existingPayment) {
     throw new AppError('Payment already initiated for this order', 409);
   }
 
+  const orderData = await createRazorpayOrder(
+    order.totalAmount - order.discountAmount,
+    order.id,
+  );
+
   const payment = await prisma.payment.create({
     data: {
-      orderId: data.orderId,
+      orderId: order.id,
       amount: order.totalAmount - order.discountAmount,
-      paymentMethod: data.paymentMethod,
+      paymentMethod: parsedData.paymentMethod,
+      razorpayOrderId: orderData.id,
       status: 'CREATED',
     },
   });
@@ -43,6 +68,7 @@ export const initiatePayment = async (
     success: true,
     message: 'Payment initiated successfully',
     data: {
+      rzorderData: orderData,
       paymentId: payment.id,
       orderId: payment.orderId,
       amount: payment.amount,
@@ -129,12 +155,8 @@ export const verifyRazorpayPayment = async (
   razorpayPaymentId: string,
   razorpaySignature: string,
 ) => {
-  // Verify order exists and belongs to user
   const order = await prisma.order.findFirst({
-    where: {
-      id: orderId,
-      userId,
-    },
+    where: { id: orderId, userId },
   });
 
   if (!order) {
@@ -149,50 +171,93 @@ export const verifyRazorpayPayment = async (
     throw new AppError('Payment not found', 404);
   }
 
-  // Verify signature
-  const key_secret = config.rzpTestKeySecret;
+  // 🔐 Signature verification (unchanged)
+  const keySecret = config.rzpTestKeySecret;
   const body = `${razorpayOrderId}|${razorpayPaymentId}`;
 
-  if (!key_secret || key_secret === undefined) {
-    throw new AppError('Something went wrong');
+  if (!keySecret) {
+    throw new AppError('Razorpay secret missing');
   }
 
   const expectedSignature = crypto
-    .createHmac('sha256', key_secret)
+    .createHmac('sha256', keySecret)
     .update(body)
     .digest('hex');
 
   if (expectedSignature !== razorpaySignature) {
-    throw new AppError(
-      'Invalid payment signature. Payment verification failed',
-      400,
-    );
+    throw new AppError('Invalid payment signature', 400);
   }
 
-  // Update payment status
-  const updatedPayment = await prisma.payment.update({
-    where: { id: payment.id },
-    data: {
-      status: 'SUCCESS',
-      razorpayOrderId,
-      razorpayPaymentId,
-      razorpaySignature,
-    },
-  });
+  const rzOrder = await rzp.orders.fetch(razorpayOrderId);
 
-  // Update order status
-  await prisma.order.update({
-    where: { id: orderId },
-    data: { status: 'CONFIRMED' },
+  if (rzOrder.status !== 'paid') {
+    throw new AppError('Payment not completed', 400);
+  }
+
+  if (
+    Number(rzOrder.amount) !==
+    Number(order.totalAmount - order.discountAmount) * 100
+  ) {
+    throw new AppError('Amount mismatch', 400);
+  }
+
+  // 🚨 FINALIZATION STARTS HERE
+  await prisma.$transaction(async (tx) => {
+    // 1️⃣ Validate cart again
+    const { productMap } = await validateProductsByCart(userId);
+
+    if (!productMap || productMap.size === 0) {
+      throw new AppError('Cart is empty', 400);
+    }
+
+    // 2️⃣ Decrement stock
+    for (const [productId, quantity] of productMap.entries()) {
+      await tx.product.update({
+        where: { id: productId },
+        data: { stock: { decrement: quantity[0] } },
+      });
+    }
+
+    // 3️⃣ Create order items
+    await tx.orderItem.createMany({
+      data: Array.from(productMap.entries()).map(([productId, quantity]) => ({
+        orderId,
+        productId,
+        quantity: quantity[0] || 0,
+        price: quantity[1] || 0,
+      })),
+    });
+
+    // 4️⃣ Update payment
+    await tx.payment.update({
+      where: { id: payment.id },
+      data: {
+        status: 'SUCCESS',
+        paymentMethod: 'RAZORPAY',
+        razorpayOrderId,
+        razorpayPaymentId,
+        razorpaySignature,
+      },
+    });
+
+    // 5️⃣ Update order
+    await tx.order.update({
+      where: { id: orderId },
+      data: { status: 'CONFIRMED' },
+    });
+
+    // 6️⃣ Clear cart
+    await tx.cartItem.deleteMany({
+      where: { userId },
+    });
   });
 
   return {
-    success: true,
-    message: 'Payment verified and confirmed successfully',
+    status: 'success',
+    message: 'Payment verified and order confirmed successfully',
     data: {
-      paymentId: updatedPayment.id,
-      orderId: updatedPayment.orderId,
-      status: updatedPayment.status,
+      orderId,
+      paymentId: payment.id,
     },
   };
 };

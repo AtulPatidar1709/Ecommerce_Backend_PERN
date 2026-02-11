@@ -15,10 +15,12 @@ const router = Router();
 router.use(requireAuth);
 
 // User routes (authenticated)
-router.post('/', initiatePaymentController);
+// router.post('/', initiatePaymentController);
+
 router.get('/order/:orderId', getPaymentByOrderIdController);
 router.get('/:id', getPaymentByIdController);
 router.post('/verify/razorpay', verifyRazorpayPaymentController);
+router.post('/verify/initiate-payment', initiatePaymentController);
 
 // Admin routes
 router.get('/', isAdmin, getAllPaymentsController);

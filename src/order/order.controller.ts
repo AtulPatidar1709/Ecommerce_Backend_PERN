@@ -7,6 +7,7 @@ import {
 } from './oder.schema';
 import { getUserId } from '../auth/helper/helper';
 import { parseQuery } from './helper/helper';
+import { AppError } from '../utils/AppError';
 
 export const createOrderController = async (
   req: Request,
@@ -15,14 +16,23 @@ export const createOrderController = async (
 ) => {
   try {
     const userId = getUserId(req);
-    console.log('Request body:', req.body.data);
+
     const data = createOrderSchema.parse(req.body.data);
-    const order = await orderService.createOrder(userId, data);
+
+    // 🔒 Only COD allowed via this route
+    if (data.paymentMethod && data.paymentMethod !== 'COD') {
+      throw new AppError('Invalid payment method for this route', 400);
+    }
+
+    const order = await orderService.createOrder(userId, {
+      ...data,
+      paymentMethod: 'COD',
+    });
 
     res.status(201).json({
       success: true,
       message: 'Order created successfully',
-      data: order,
+      data: { order },
     });
   } catch (err) {
     next(err);

@@ -19,13 +19,9 @@ export const createBannerController = async (
   try {
     const files = getFiles(req);
 
-    console.log('files length ', files.length);
-
     validateFiles(files, 1);
 
     const imgUrls = await uploadImages(files);
-
-    console.log('ImageUrls ', imgUrls);
 
     let data = req.body;
 
@@ -33,9 +29,8 @@ export const createBannerController = async (
 
     data = createBannerSchema.parse(dataWithImageUrl);
 
-    console.log('dataWithImageUrl is ', dataWithImageUrl);
-
     const result = await bannerService.createBanner(dataWithImageUrl);
+
     res.status(201).json(result);
   } catch (error) {
     next(error);

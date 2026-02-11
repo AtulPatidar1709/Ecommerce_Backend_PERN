@@ -20,13 +20,9 @@ export const createCategoryController = async (
   try {
     const files = getFiles(req);
 
-    console.log('files length ', files.length);
-
     validateFiles(files, 1);
 
     const imgUrls = await uploadImages(files);
-
-    console.log('ImageUrls ', imgUrls);
 
     let data = req.body;
 

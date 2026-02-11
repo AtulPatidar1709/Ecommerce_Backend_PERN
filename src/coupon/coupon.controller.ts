@@ -62,10 +62,7 @@ export const validateCouponController = async (
 ) => {
   try {
     const userId = getUserId(req);
-
     const data = validateCouponSchema.parse(req.body);
-
-    console.log('Validating coupon with data:', data);
     const result = await couponService.validateCoupon(userId, data);
     res.status(200).json(result);
   } catch (error) {

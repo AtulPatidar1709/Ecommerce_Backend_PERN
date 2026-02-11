@@ -1,30 +1,27 @@
 import { Request, Response, NextFunction } from 'express';
 import {
-  initiatePaymentSchema,
   verifyRazorpayPaymentSchema,
   getPaymentSchema,
 } from './payment.schema';
 import * as paymentService from './payment.service';
 import { AppError } from '../utils/AppError';
 
-export const initiatePaymentController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const userId = req.user?.id;
-    if (!userId) {
-      throw new AppError('User ID not found', 401);
-    }
-
-    const data = initiatePaymentSchema.parse(req.body);
-    const result = await paymentService.initiatePayment(userId, data);
-    res.status(201).json(result);
-  } catch (error) {
-    next(error);
-  }
-};
+// export const initiatePaymentController = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ) => {
+//   try {
+//     const user = req.user;
+//     if (!user) {
+//       throw new AppError('Unauthorized', 401);
+//     }
+//     const result = await paymentService.initiatePayment(user, req.body);
+//     res.status(201).json(result);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 export const getPaymentByOrderIdController = async (
   req: Request,
@@ -89,7 +86,28 @@ export const verifyRazorpayPaymentController = async (
       razorpayPaymentId,
       razorpaySignature,
     );
-    res.status(200).json(result);
+    res.status(200).json({
+      success: 'success',
+      message: 'Payment verified successfully',
+      result: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const initiatePaymentController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const user = req.user;
+    if (!user) {
+      throw new AppError('User ID not found', 401);
+    }
+    const result = await paymentService.initiatePayment(user, req.body);
+    res.status(201).json(result);
   } catch (error) {
     next(error);
   }

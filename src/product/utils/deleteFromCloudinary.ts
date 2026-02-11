@@ -15,7 +15,6 @@ export const deleteFromCloudinary = async (url: string): Promise<void> => {
     const publicId = lastPart.replace(/\.[^/.]+$/, ''); // remove file extension
 
     await cloudinary.uploader.destroy(publicId, { resource_type: 'image' });
-    console.log(`Deleted image: ${publicId}`);
   } catch (err) {
     console.error('Error deleting image from Cloudinary:', err);
   }

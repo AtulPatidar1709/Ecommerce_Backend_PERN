@@ -23,7 +23,6 @@ const isAdmin = (
 
     next();
   } catch (error: unknown) {
-    console.log(error);
     return next(createHttpError(400, 'Something went wrong'));
   }
 };

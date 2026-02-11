@@ -86,8 +86,6 @@ export const validateCoupon = async (
     where: { code: data.code },
   });
 
-  console.log('coupon details ', coupon);
-
   if (!coupon) {
     throw new AppError('Invalid coupon code', 404);
   }
@@ -107,8 +105,6 @@ export const validateCoupon = async (
       400,
     );
   }
-
-  // Check if user has already used this coupon
   const userCouponUsage = await prisma.userCoupon.findFirst({
     where: {
       userId,

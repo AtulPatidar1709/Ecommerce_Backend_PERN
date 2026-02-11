@@ -24,8 +24,9 @@ export const getOrderByIdSchema = z.object({
 });
 
 export const createOrderSchema = z.object({
-  addressId: z.uuid('Invalid address ID'),
-  couponId: z.uuid('Invalid coupon ID').optional(),
+  addressId: z.string().min(1, 'Invalid address ID'),
+  couponId: z.string().optional(),
+  paymentMethod: z.enum(['COD', 'RAZORPAY']).default('COD'),
 });
 
 export const updateOrderStatusSchema = z.object({

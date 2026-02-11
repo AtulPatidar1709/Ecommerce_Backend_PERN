@@ -17,7 +17,7 @@ const validateUserAddress = async (userId: string, addressId: string) => {
   }
 };
 
-const validateProductsByCart = async (
+export const validateProductsByCart = async (
   userId: string,
 ): Promise<{
   productMap: Map<string, [number, number]>;
@@ -27,8 +27,6 @@ const validateProductsByCart = async (
     where: { userId },
     include: { product: true },
   });
-
-  console.log('Cart Items:', cartItems); // Debugging log
 
   if (cartItems.length === 0) {
     throw new AppError('Cart is empty', 400);
@@ -90,16 +88,23 @@ const applyCoupon = async (
   };
 };
 
-// ✅ Main createOrder function using only cart IDs
 export const createOrder = async (
   userId: string,
-  data: { addressId: string; couponId?: string },
+  data: {
+    addressId: string;
+    couponId?: string;
+    paymentMethod?: 'COD' | 'RAZORPAY';
+  },
 ) => {
-  // Validate user address
+  // Validate address
   await validateUserAddress(userId, data.addressId);
 
-  // Validate products and calculate total
+  // Validate cart + compute totals
   const { totalAmount, productMap } = await validateProductsByCart(userId);
+
+  if (!productMap || productMap.size === 0) {
+    throw new AppError('Cart is empty', 400);
+  }
 
   // Apply coupon
   const { discountAmount, finalAmount } = await applyCoupon(
@@ -109,7 +114,7 @@ export const createOrder = async (
 
   try {
     const order = await prisma.$transaction(async (tx) => {
-      // Decrement stock for all products
+      // Decrement stock (atomic)
       for (const [productId, quantity] of productMap.entries()) {
         await tx.product.update({
           where: { id: productId },
@@ -117,23 +122,22 @@ export const createOrder = async (
         });
       }
 
-      // Create order
-      return tx.order.create({
+      // Create order + items
+      const orderData = await tx.order.create({
         data: {
           userId,
           addressId: data.addressId,
           couponId: data.couponId,
           totalAmount: finalAmount,
           discountAmount,
+          status: 'CONFIRMED',
           orderItems: {
             create: Array.from(productMap.entries()).map(
-              ([productId, quantity]) => {
-                return {
-                  productId,
-                  quantity: quantity[0] || 0,
-                  price: quantity[1] || 0, // save actual paid price
-                };
-              },
+              ([productId, quantity]) => ({
+                productId,
+                quantity: quantity[0] || 0,
+                price: quantity[1] || 0,
+              }),
             ),
           },
         },
@@ -144,6 +148,23 @@ export const createOrder = async (
           payment: true,
         },
       });
+
+      // Create payment row (COD or Razorpay-confirmed)
+      await tx.payment.create({
+        data: {
+          orderId: orderData.id,
+          amount: finalAmount,
+          paymentMethod: data.paymentMethod ?? 'COD',
+          status: data.paymentMethod === 'RAZORPAY' ? 'SUCCESS' : 'CREATED',
+        },
+      });
+
+      // Clear cart
+      await tx.cartItem.deleteMany({
+        where: { userId },
+      });
+
+      return orderData;
     });
 
     return order;
@@ -151,6 +172,56 @@ export const createOrder = async (
     if (error instanceof AppError) throw error;
     throw new AppError('Failed to create order', 500);
   }
+};
+
+export const createPendingOrder = async (
+  userId: string,
+  data: {
+    addressId: string;
+    couponId?: string;
+  },
+) => {
+  await validateUserAddress(userId, data.addressId);
+
+  const { totalAmount, productMap } = await validateProductsByCart(userId);
+
+  if (!productMap || productMap.size === 0) {
+    throw new AppError('Cart is empty', 400);
+  }
+
+  const { discountAmount, finalAmount } = await applyCoupon(
+    data.couponId,
+    totalAmount,
+  );
+
+  return prisma.order.create({
+    data: {
+      userId,
+      addressId: data.addressId,
+      couponId: data.couponId,
+      totalAmount: finalAmount,
+      discountAmount,
+      status: 'PENDING',
+      orderItems: {
+        create: Array.from(productMap.entries()).map(
+          ([productId, quantity]) => ({
+            productId,
+            quantity: quantity[0] || 0,
+            price: quantity[1] || 0,
+          }),
+        ),
+      },
+    },
+    include: {
+      orderItems: { include: { product: true } },
+      address: {
+        select: {
+          id: true,
+          street: true,
+        },
+      },
+    },
+  });
 };
 
 export const getUserOrders = async (userId: string, query: GetOrdersQuery) => {
@@ -172,25 +243,20 @@ export const getUserOrders = async (userId: string, query: GetOrdersQuery) => {
         [query.sortBy === 'totalAmount' ? 'totalAmount' : 'createdAt']:
           query.order === 'asc' ? 'asc' : 'desc',
       },
-      include: {
+      select: {
+        id: true,
+        status: true,
+        totalAmount: true,
+        createdAt: true,
         orderItems: {
-          include: {
+          select: {
             product: {
               select: {
                 id: true,
-                title: true,
-                images: true,
-                price: true,
-                discountPrice: true,
               },
             },
           },
         },
-        address: true,
-        coupon: true,
-        payment: { select: { status: true, paymentMethod: true } },
-        cancellation: true,
-        return: true,
       },
     }),
     prisma.order.count({ where: whereClause }),
@@ -220,47 +286,16 @@ export const getOrderById = async (
             select: {
               id: true,
               title: true,
-              description: true,
               price: true,
               discountPrice: true,
               images: {
+                take: 1,
                 select: { imageUrl: true },
               },
             },
           },
         },
       },
-      coupon: {
-        select: {
-          id: true,
-        },
-      },
-      payment: {
-        select: {
-          id: true,
-          status: true,
-          paymentMethod: true,
-        },
-      },
-      cancellation: {
-        select: {
-          id: true,
-          reason: true,
-          requestedAt: true,
-          status: true,
-          processedAt: true,
-        },
-      },
-      return: {
-        select: {
-          id: true,
-          reason: true,
-          requestedAt: true,
-          status: true,
-          processedAt: true,
-        },
-      },
-      user: { select: { email: true, phone: true } },
     },
   });
 
