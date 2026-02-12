@@ -1,4 +1,5 @@
 import { prisma } from '../config/prisma';
+import { getImageUrl } from '../product/utils/cloudinary/getImageUrl';
 import { AppError } from '../utils/AppError';
 import {
   GetOrderByIdInput,
@@ -232,7 +233,6 @@ export const getUserOrders = async (userId: string, query: GetOrdersQuery) => {
     ...(query.status && { status: query.status }),
   };
 
-  // // Run both queries in parallel
   const [orders, total] = await Promise.all([
     prisma.order.findMany({
       where: { userId },
@@ -266,33 +266,6 @@ export const getUserOrders = async (userId: string, query: GetOrdersQuery) => {
     prisma.order.count({ where: whereClause }),
   ]);
 
-  // const orders = await prisma.order.findMany({
-  //   where: { userId },
-  //   skip,
-  //   take: limit,
-  //   orderBy: {
-  //     [query.sortBy === 'totalAmount' ? 'totalAmount' : 'createdAt']:
-  //       query.order === 'asc' ? 'asc' : 'desc',
-  //   },
-  //   select: {
-  //     id: true,
-  //     status: true,
-  //     totalAmount: true,
-  //     createdAt: true,
-  //     orderItems: {
-  //       select: {
-  //         product: {
-  //           select: {
-  //             id: true,
-  //           },
-  //         },
-  //       },
-  //     },
-  //   },
-  // });
-
-  // const total = await prisma.order.count({ where: whereClause });
-
   return {
     orders,
     pagination: {
@@ -321,7 +294,7 @@ export const getOrderById = async (
               discountPrice: true,
               images: {
                 take: 1,
-                select: { imageUrl: true },
+                select: { publicId: true },
               },
             },
           },
@@ -345,7 +318,19 @@ export const getOrderById = async (
     throw new AppError('Unauthorized access to this order', 403);
   }
 
-  return order;
+  return {
+    ...order,
+    orderItems: order.orderItems.map((item) => ({
+      ...item,
+      product: {
+        ...item.product,
+        images: item.product.images.map((img) => ({
+          ...img,
+          imageUrl: getImageUrl(img.publicId),
+        })),
+      },
+    })),
+  };
 };
 
 export const updateOrderStatus = async (

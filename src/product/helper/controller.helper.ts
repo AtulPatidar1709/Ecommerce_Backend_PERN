@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { AppError } from '../../utils/AppError';
 import { createProductSchema } from '../product.schema';
-import { uploadBufferToCloudinary } from '../utils/uploadToCloudinary';
+import { uploadImageBuffer } from '../utils/cloudinary/uploadToCloudinary';
 
 const getFiles = (req: Request): Express.Multer.File[] => {
   return (req.files as Express.Multer.File[]) || [];
@@ -28,15 +28,17 @@ const validatePrimaryIndex = (primaryIndex: number, fileCount: number) => {
 
 const uploadImages = async (
   files: Express.Multer.File[],
-): Promise<string[]> => {
+): Promise<{ publicId: string }[]> => {
   return Promise.all(
-    files.map((file) => uploadBufferToCloudinary(file.buffer, 'products')),
+    files.map((file) => uploadImageBuffer(file.buffer, 'products')),
   );
 };
 
 const parseCreateProductData = (
   body: Record<string, unknown>,
-  imageUrls: string[],
+  images: {
+    publicId: string;
+  }[],
   primaryIndex: number,
 ) => {
   return createProductSchema.parse({
@@ -44,14 +46,14 @@ const parseCreateProductData = (
     price: Number((body as Record<string, unknown>).price),
     stock: Number((body as Record<string, unknown>).stock),
     discountPrice: Number((body as Record<string, unknown>).discountPrice),
-    images: imageUrls.map((url) => ({ imageUrl: url })),
+    images: images.map((url) => ({ imageUrl: url })),
     primaryIndex,
   });
 };
 
-type ImageData = { file?: File; imageUrl?: string; id?: string };
+type ImageData = { file?: File; publicId: string; id?: string };
 
-const processUpdateImages = async (
+const prepareUpdateImagesPayload = async (
   imagesData: ImageData[],
   files: Express.Multer.File[],
   primaryIndex: number,
@@ -60,24 +62,26 @@ const processUpdateImages = async (
 
   return Promise.all(
     imagesData.map(async (img, idx) => {
+      // New uploaded file
       if (img.file && files[fileIndex]) {
-        const url = await uploadBufferToCloudinary(
+        const { publicId } = await uploadImageBuffer(
           files[fileIndex].buffer,
           'products',
         );
         fileIndex++;
 
         return {
-          imageUrl: url,
-          isPrimary: idx === Number(primaryIndex),
+          publicId,
+          isPrimary: idx === primaryIndex,
         };
       }
 
-      if (img.imageUrl) {
+      // Existing image
+      if (img.publicId && img.id) {
         return {
           id: img.id,
-          imageUrl: img.imageUrl,
-          isPrimary: idx === Number(primaryIndex),
+          publicId: img.publicId,
+          isPrimary: idx === primaryIndex,
         };
       }
 
@@ -92,5 +96,5 @@ export {
   validatePrimaryIndex,
   uploadImages,
   parseCreateProductData,
-  processUpdateImages,
+  prepareUpdateImagesPayload,
 };

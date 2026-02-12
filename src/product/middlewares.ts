@@ -1,13 +1,24 @@
-import multer from 'multer';
+import multer, { FileFilterCallback } from 'multer';
+import { Request } from 'express';
 
 const storage = multer.memoryStorage();
 
-const fileFilter: multer.Options['fileFilter'] = (_req, file, cb) => {
+const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+
+const fileFilter = (
+  _req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
+) => {
   if (!file.mimetype.startsWith('image/')) {
-    cb(new Error('Only image files are allowed'));
-  } else {
-    cb(null, true);
+    return cb(new Error('Only image files are allowed'));
   }
+
+  if (!allowedTypes.includes(file.mimetype)) {
+    return cb(new Error('Only JPG, PNG, WEBP allowed'));
+  }
+
+  cb(null, true);
 };
 
 export const upload = multer({

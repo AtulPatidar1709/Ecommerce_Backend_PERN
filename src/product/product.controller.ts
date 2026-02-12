@@ -8,7 +8,7 @@ import { AppError } from '../utils/AppError';
 import {
   getFiles,
   parseCreateProductData,
-  processUpdateImages,
+  prepareUpdateImagesPayload,
   uploadImages,
   validateFiles,
   validatePrimaryIndex,
@@ -29,10 +29,10 @@ export const createProductController = async (
     validatePrimaryIndex(primaryIndex, files.length);
 
     //upload all files at cloudinary and get urls array
-    const imgUrls = await uploadImages(files);
+    const uploadedImages = await uploadImages(files);
 
     // structure data according to our schema
-    const data = parseCreateProductData(req.body, imgUrls, primaryIndex);
+    const data = parseCreateProductData(req.body, uploadedImages, primaryIndex);
 
     const product = await productService.createProduct(data);
 
@@ -89,7 +89,7 @@ export const updateProductController = async (
     // Separate new files from existing URLs
     const files = getFiles(req);
 
-    const images = await processUpdateImages(
+    const images = await prepareUpdateImagesPayload(
       imagesData,
       files,
       Number(primaryIndex),

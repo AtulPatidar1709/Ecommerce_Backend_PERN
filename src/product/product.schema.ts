@@ -40,14 +40,15 @@ export const createProductSchema = z.object({
   images: z
     .array(
       z.object({
-        imageUrl: z.string('Image URL is required'),
+        publicId: z.string('Image URL is required'),
         id: z.string().optional(),
-        isPrimary: z.boolean().optional(),
+        isPrimary: z.boolean().default(false),
       }),
     )
     .min(4, 'At least 3 images are required'),
   primaryIndex: z.number().min(0, 'Invalid primary index'),
   slug: z.string().optional(),
+  brand: z.string().refine((val) => val.toUpperCase()),
 });
 
 export const updateProductSchema = createProductSchema.partial();

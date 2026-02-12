@@ -1,7 +1,7 @@
 import { prisma } from '../../config/prisma';
 import { AppError } from '../../utils/AppError';
 import { UpdateProductInput } from '../product.schema';
-import { deleteFromCloudinary } from '../utils/deleteFromCloudinary';
+import { deleteFromCloudinary } from '../utils/cloudinary/deleteFromCloudinary';
 
 // Helper function to validate category exists
 const validateCategory = async (categoryId: string) => {
@@ -43,29 +43,71 @@ const deleteCloudinaryImages = async (imageUrls: string[]) => {
 
 // Helper function to process images for update
 const processUpdateImages = (images: UpdateProductInput['images']) => {
-  type PrismaImageAcc = {
-    create: Array<{ imageUrl: string; isPrimary?: boolean }>;
-    updateMany: Array<{ data: { isPrimary?: boolean }; where: { id: string } }>;
+  type CreateImage = {
+    create: {
+      publicId: string;
+      isPrimary?: boolean;
+      position?: number;
+    };
   };
 
-  const prismaImages = images?.map((img) => {
+  type UpdateImage = {
+    update: {
+      where: { id: string };
+      data: {
+        isPrimary?: boolean;
+        position?: number;
+      };
+    };
+  };
+
+  type MappedImage = CreateImage | UpdateImage;
+
+  type PrismaImageAcc = {
+    create: CreateImage['create'][];
+    update: UpdateImage['update'][];
+  };
+
+  if (!images || images.length === 0) {
+    return { create: [], update: [] };
+  }
+
+  const mapped: MappedImage[] = images.map((img, index) => {
     if (img.id) {
       return {
-        update: { data: { isPrimary: img.isPrimary }, where: { id: img.id } },
+        update: {
+          where: { id: img.id },
+          data: {
+            isPrimary: img.isPrimary,
+            position: index,
+          },
+        },
       };
     }
-    return { create: { imageUrl: img.imageUrl, isPrimary: img.isPrimary } };
+
+    if (!img.publicId) {
+      throw new Error('publicId is required for new images');
+    }
+
+    return {
+      create: {
+        publicId: img.publicId,
+        isPrimary: img.isPrimary,
+        position: index,
+      },
+    };
   });
 
-  return (
-    prismaImages?.reduce<PrismaImageAcc>(
-      (acc, val) => {
-        if ('create' in val) acc.create.push(val.create!);
-        if ('update' in val) acc.updateMany.push(val.update!);
-        return acc;
-      },
-      { create: [], updateMany: [] },
-    ) || { create: [], updateMany: [] }
+  return mapped.reduce<PrismaImageAcc>(
+    (acc, item) => {
+      if ('create' in item) {
+        acc.create.push(item.create);
+      } else {
+        acc.update.push(item.update);
+      }
+      return acc;
+    },
+    { create: [], update: [] },
   );
 };
 

@@ -12,6 +12,7 @@ import {
   GetAllProductsQueryInputType,
   UpdateProductInput,
 } from './product.schema';
+import { getImageUrl } from './utils/cloudinary/getImageUrl';
 
 export const createProduct = async (data: CreateProductInput) => {
   await validateCategory(data.categoryId);
@@ -27,7 +28,7 @@ export const createProduct = async (data: CreateProductInput) => {
       categoryId: data.categoryId,
       images: {
         create: data.images.map((img, index) => ({
-          imageUrl: img.imageUrl,
+          publicId: img.publicId,
           isPrimary: index === data.primaryIndex,
           position: index,
         })),
@@ -40,7 +41,13 @@ export const createProduct = async (data: CreateProductInput) => {
     },
   });
 
-  return product;
+  return {
+    ...product,
+    images: product.images.map((img) => ({
+      ...img,
+      imageUrl: getImageUrl(img.publicId),
+    })),
+  };
 };
 
 export const getAllProducts = async ({
@@ -120,7 +127,7 @@ export const getAllProducts = async ({
           orderBy: [{ isPrimary: 'desc' }, { position: 'asc' }],
           take: 2,
           select: {
-            imageUrl: true,
+            publicId: true,
             isPrimary: true,
           },
         },
@@ -130,9 +137,17 @@ export const getAllProducts = async ({
     prisma.product.count({ where }),
   ]);
 
+  const productsWithImages = products.map((product) => ({
+    ...product,
+    images: product.images.map((img) => ({
+      ...img,
+      imageUrl: getImageUrl(img.publicId),
+    })),
+  }));
+
   //RESPONSE
   return {
-    products,
+    products: productsWithImages,
     pagination: {
       total,
       page,
@@ -158,29 +173,50 @@ export const getProductBySlug = async (slug: string) => {
     throw new AppError('Product not found', 404);
   }
 
-  return product;
+  return {
+    ...product,
+    images: product.images.map((img) => ({
+      ...img,
+      imageUrl: getImageUrl(img.publicId),
+    })),
+  };
 };
 
 export const updateProduct = async (id: string, data: UpdateProductInput) => {
   const product = await getProductOrThrow(id);
 
-  const updatedImagesIds =
+  const incomingImageIds =
     data.images?.filter((img) => img.id).map((img) => img.id) || [];
 
   const removedImages = product.images.filter(
-    (img) => img.id && updatedImagesIds.includes(img.id),
+    (img) => !incomingImageIds.includes(img.id),
   );
 
-  await deleteCloudinaryImages(removedImages.map((img) => img.imageUrl));
+  await deleteCloudinaryImages(removedImages.map((img) => img.publicId));
 
   const imagesData = processUpdateImages(data.images);
 
-  // Update product
   return prisma.product.update({
     where: { id },
     data: {
-      ...data,
-      images: imagesData,
+      title: data.title,
+      description: data.description,
+      price: data.price,
+      discountPrice: data.discountPrice,
+      stock: data.stock,
+      brand: data.brand,
+      slug: data.slug,
+
+      ...(data.categoryId && {
+        category: {
+          connect: { id: data.categoryId },
+        },
+      }),
+
+      images: {
+        create: imagesData.create,
+        update: imagesData.update,
+      },
     },
     include: { images: true },
   });
@@ -189,7 +225,7 @@ export const updateProduct = async (id: string, data: UpdateProductInput) => {
 export const deleteProduct = async (id: string) => {
   const product = await getProductOrThrow(id);
 
-  await deleteCloudinaryImages(product.images.map((img) => img.imageUrl));
+  await deleteCloudinaryImages(product.images.map((img) => img.publicId));
 
   return await prisma.product.delete({
     where: { id },
