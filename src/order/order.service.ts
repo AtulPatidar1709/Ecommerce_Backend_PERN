@@ -1,5 +1,4 @@
 import { prisma } from '../config/prisma';
-import { getImageUrl } from '../product/utils/cloudinary/getImageUrl';
 import { AppError } from '../utils/AppError';
 import {
   GetOrderByIdInput,
@@ -318,19 +317,7 @@ export const getOrderById = async (
     throw new AppError('Unauthorized access to this order', 403);
   }
 
-  return {
-    ...order,
-    orderItems: order.orderItems.map((item) => ({
-      ...item,
-      product: {
-        ...item.product,
-        images: item.product.images.map((img) => ({
-          ...img,
-          imageUrl: getImageUrl(img.publicId),
-        })),
-      },
-    })),
-  };
+  return order;
 };
 
 export const updateOrderStatus = async (

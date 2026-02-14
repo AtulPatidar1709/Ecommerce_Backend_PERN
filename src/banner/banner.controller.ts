@@ -50,6 +50,7 @@ export const getAllBannersController = async (
           ? false
           : undefined;
     const result = await bannerService.getAllBanners(isActive);
+
     res.status(200).json(result);
   } catch (error) {
     next(error);
@@ -92,6 +93,7 @@ export const updateBannerController = async (
     const { id } = getBannerSchema.parse({ id: req.params.id });
     const data = updateBannerSchema.parse(req.body);
     const result = await bannerService.updateBanner(id, data);
+
     res.status(200).json(result);
   } catch (error) {
     next(error);

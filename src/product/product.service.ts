@@ -12,7 +12,6 @@ import {
   GetAllProductsQueryInputType,
   UpdateProductInput,
 } from './product.schema';
-import { getImageUrl } from './utils/cloudinary/getImageUrl';
 
 export const createProduct = async (data: CreateProductInput) => {
   await validateCategory(data.categoryId);
@@ -41,13 +40,7 @@ export const createProduct = async (data: CreateProductInput) => {
     },
   });
 
-  return {
-    ...product,
-    images: product.images.map((img) => ({
-      ...img,
-      imageUrl: getImageUrl(img.publicId),
-    })),
-  };
+  return product;
 };
 
 export const getAllProducts = async ({
@@ -60,6 +53,17 @@ export const getAllProducts = async ({
   limit = 12,
   sort,
 }: GetAllProductsQueryInputType) => {
+  console.log('products Query ', {
+    search,
+    category,
+    minPrice,
+    maxPrice,
+    rating,
+    page,
+    limit,
+    sort,
+  });
+
   //FILTERS
   const where: any = {
     isActive: true,
@@ -74,17 +78,18 @@ export const getAllProducts = async ({
 
   if (category?.length) {
     where.category = {
-      name: {
-        in: category,
-        mode: 'insensitive',
+      is: {
+        name: {
+          in: category.map((c) => c.toUpperCase()),
+        },
       },
     };
   }
 
-  if (minPrice || maxPrice) {
+  if (minPrice !== undefined || maxPrice !== undefined) {
     where.price = {};
-    if (minPrice) where.price.gte = minPrice;
-    if (maxPrice) where.price.lte = maxPrice;
+    if (minPrice !== undefined) where.price.gte = minPrice;
+    if (maxPrice !== undefined) where.price.lte = maxPrice;
   }
 
   if (rating !== undefined) {
@@ -102,6 +107,8 @@ export const getAllProducts = async ({
   if (sort === 'price_asc') orderBy = { price: 'asc' };
   if (sort === 'price_desc') orderBy = { price: 'desc' };
   if (sort === 'latest') orderBy = { createdAt: 'desc' };
+
+  console.log('products filters are after checks', where);
 
   //DB QUERIES
   const [products, total] = await Promise.all([
@@ -136,18 +143,23 @@ export const getAllProducts = async ({
 
     prisma.product.count({ where }),
   ]);
-
-  const productsWithImages = products.map((product) => ({
-    ...product,
-    images: product.images.map((img) => ({
-      ...img,
-      imageUrl: getImageUrl(img.publicId),
-    })),
-  }));
-
   //RESPONSE
+
+  const debug = await prisma.product.findMany({
+    select: {
+      id: true,
+      title: true,
+      categoryId: true,
+      category: {
+        select: { id: true, name: true },
+      },
+    },
+  });
+
+  console.dir(debug, { depth: null });
+
   return {
-    products: productsWithImages,
+    products,
     pagination: {
       total,
       page,
@@ -173,13 +185,7 @@ export const getProductBySlug = async (slug: string) => {
     throw new AppError('Product not found', 404);
   }
 
-  return {
-    ...product,
-    images: product.images.map((img) => ({
-      ...img,
-      imageUrl: getImageUrl(img.publicId),
-    })),
-  };
+  return product;
 };
 
 export const updateProduct = async (id: string, data: UpdateProductInput) => {

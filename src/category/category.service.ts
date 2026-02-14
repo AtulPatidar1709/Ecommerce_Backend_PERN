@@ -93,7 +93,7 @@ export const getCategoryBySlug = async (slug: string) => {
           stock: true,
           images: {
             where: { isPrimary: true },
-            select: { imageUrl: true },
+            select: { publicId: true },
             take: 1,
           },
         },

@@ -26,7 +26,7 @@ export const createCategoryController = async (
 
     let data = req.body;
 
-    data.imageUrl = imgUrls[0];
+    data.imageUrl = imgUrls[0].publicId;
 
     data = createCategorySchema.parse(data);
 

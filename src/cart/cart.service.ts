@@ -1,5 +1,4 @@
 import { prisma } from '../config/prisma';
-import { getImageUrl } from '../product/utils/cloudinary/getImageUrl';
 import { AppError } from '../utils/AppError';
 import { AddToCartInput } from './cart.schema';
 
@@ -94,13 +93,6 @@ export const getCartItems = async (userId: string) => {
   // Add subtotal for each item and calculate cart totals
   const cartItemsWithSubtotal = cartItems.map((item) => ({
     ...item,
-    product: {
-      ...item.product,
-      images: item.product.images.map((img) => ({
-        ...img,
-        imageUrl: getImageUrl(img.publicId),
-      })),
-    },
     subtotal:
       (item.product.discountPrice || item.product.price) * item.quantity,
   }));
