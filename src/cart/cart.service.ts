@@ -1,6 +1,6 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
-import { AddToCartInput } from './cart.schema';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
+import { AddToCartInput } from "./cart.schema.js";
 
 export const addToCart = async (userId: string, data: AddToCartInput) => {
   // Verify product exists and has stock

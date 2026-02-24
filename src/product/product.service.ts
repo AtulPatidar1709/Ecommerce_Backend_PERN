@@ -1,17 +1,17 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 import {
   deleteCloudinaryImages,
   getProductOrThrow,
   processUpdateImages,
   validateCategory,
-} from './helper/helper';
-import slugify from './helper/slugify';
+} from "./helper/helper.js";
+import slugify from "./helper/slugify.js";
 import {
   CreateProductInput,
   GetAllProductsQueryInputType,
   UpdateProductInput,
-} from './product.schema';
+} from "./product.schema.js";
 
 export const createProduct = async (data: CreateProductInput) => {
   await validateCategory(data.categoryId);

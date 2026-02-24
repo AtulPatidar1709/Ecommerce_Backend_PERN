@@ -1,6 +1,6 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
-import { CreateAddressInput, UpdateAddressInput } from './address.schema';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
+import { CreateAddressInput, UpdateAddressInput } from "./address.schema.js";
 
 export const createAddress = async (
   userId: string,

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { productSummaryQuerySchema } from './product.summary.schema';
-import * as productSummaryService from './product.summary.service';
+import { productSummaryQuerySchema } from "./product.summary.schema.js";
+import * as productSummaryService from "./product.summary.service.js";
 
 export const getProductSummaryController = async (
   req: Request,

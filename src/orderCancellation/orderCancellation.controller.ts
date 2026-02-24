@@ -3,10 +3,11 @@ import {
   createOrderCancellationSchema,
   updateOrderCancellationSchema,
   getOrderCancellationSchema,
-} from './orderCancellation.schema';
-import * as orderCancellationService from './orderCancellation.service';
-import { AppError } from '../utils/AppError';
-import { RequestStatus } from '../../prisma/generated/prisma/enums';
+} from "./orderCancellation.schema.js";
+import * as orderCancellationService from "./orderCancellation.service.js";
+import { AppError } from '../utils/AppError.js';
+import { getUserId } from '../auth/helper/helper.js';
+import { RequestStatus } from '@prisma/client';
 
 export const createOrderCancellationController = async (
   req: Request,
@@ -14,7 +15,7 @@ export const createOrderCancellationController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -36,7 +37,7 @@ export const getUserOrderCancellationsController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -61,7 +62,7 @@ export const getOrderCancellationByIdController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }

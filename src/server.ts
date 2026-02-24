@@ -1,5 +1,5 @@
-import { app } from './src';
-import { config } from './src/config/config';
+import { config } from "./config/config.js";
+import { app } from "./index.js"
 
 const startServer = async () => {
   try {

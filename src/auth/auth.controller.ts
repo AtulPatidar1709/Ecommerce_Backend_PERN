@@ -4,9 +4,10 @@ import {
   loginSchema,
   otpVerifySchema,
   sendOtpSchema,
-} from './auth.schema';
-import * as authService from './auth.service';
-import { config } from '../config/config';
+} from "./auth.schema.js";
+import * as authService from "./auth.service.js";
+import { config } from '../config/config.js';
+import { AuthenticatedRequest } from '../middlewares/auth_middlewares/types/AuthenticatedRequestTypes.js';
 
 export const registerController = async (
   req: Request,
@@ -51,7 +52,7 @@ export const loginController = async (
 };
 
 export const verifyOtpController = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) => {

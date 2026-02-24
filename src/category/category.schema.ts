@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { nameField } from '../types/common/fields.schema';
+import { nameField } from '../types/common/fields.schema.js';
 
 export const createCategorySchema = z.object({
   name: nameField.transform((val) => val.toUpperCase()),

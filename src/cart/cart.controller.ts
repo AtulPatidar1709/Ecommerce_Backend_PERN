@@ -3,9 +3,9 @@ import {
   addToCartSchema,
   updateCartItemSchema,
   removeFromCartSchema,
-} from './cart.schema';
-import * as cartService from './cart.service';
-import { getUserId } from '../auth/helper/helper';
+} from "./cart.schema.js";
+import * as cartService from "./cart.service.js";
+import { getUserId } from '../auth/helper/helper.js';
 
 export const addToCartController = async (
   req: Request,

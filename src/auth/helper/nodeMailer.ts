@@ -1,7 +1,7 @@
-import { config } from '../../config/config';
+import { config } from '../../config/config.js';
 // import { getVerificationEmailTemplate } from
 import nodemailer from 'nodemailer';
-import { getVerificationEmailTemplate } from './nodeMailerTemplate';
+import { getVerificationEmailTemplate } from "./nodeMailerTemplate.js";
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',

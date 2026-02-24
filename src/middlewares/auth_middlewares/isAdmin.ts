@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import createHttpError from 'http-errors';
-import { AuthenticatedRequest } from './types/AuthenticatedRequestTypes';
+import { AuthenticatedRequest } from "./types/AuthenticatedRequestTypes.js";
 
 const isAdmin = (
   req: AuthenticatedRequest,

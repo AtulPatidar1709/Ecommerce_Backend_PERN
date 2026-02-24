@@ -6,8 +6,8 @@ import {
   refreshTokenController,
   logoutController,
   sendOtpController,
-} from './auth.controller';
-import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
+} from "./auth.controller.js";
+import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware.js';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { orderStatusSchema } from '../types/common/fields.schema';
+import { orderStatusSchema } from '../types/common/fields.schema.js';
 
 export const getOrdersQuerySchema = z.object({
   page: z

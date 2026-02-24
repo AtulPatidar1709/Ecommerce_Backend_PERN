@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import jwt from 'jsonwebtoken';
-import { AppError } from '../utils/AppError';
-import { Prisma } from '../../prisma/generated/prisma/client';
+import { AppError } from '../utils/AppError.js';
+import { Prisma } from '@prisma/client';
 
 type ValidationError = {
   field: string;

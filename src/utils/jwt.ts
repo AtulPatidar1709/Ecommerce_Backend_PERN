@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { config } from '../config/config';
-import { userType } from '../auth/auth.schema';
+import { config } from '../config/config.js';
+import { userType } from '../auth/auth.schema.js';
+
 export const generateAccessToken = (user: userType) =>
   jwt.sign(
     { sub: user.id, role: user.role, email: user.email },

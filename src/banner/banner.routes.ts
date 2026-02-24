@@ -7,10 +7,10 @@ import {
   updateBannerController,
   toggleBannerStatusController,
   deleteBannerController,
-} from './banner.controller';
-import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
-import isAdmin from '../middlewares/auth_middlewares/isAdmin';
-import { upload } from '../product/middlewares';
+} from "./banner.controller.js";
+import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware.js';
+import isAdmin from '../middlewares/auth_middlewares/isAdmin.js';
+import { upload } from '../product/middlewares.js';
 
 const router = Router();
 

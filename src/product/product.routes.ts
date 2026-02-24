@@ -5,11 +5,11 @@ import {
   updateProductController,
   deleteProductController,
   getProductBySlugController,
-} from './product.controller';
-import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
-import isAdmin from '../middlewares/auth_middlewares/isAdmin';
-import { upload } from './middlewares';
-import { getProductSummaryController } from './summary/product.summary.controller';
+} from "./product.controller.js";
+import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware.js';
+import isAdmin from '../middlewares/auth_middlewares/isAdmin.js';
+import { upload } from "./middlewares.js";
+import { getProductSummaryController } from "./summary/product.summary.controller.js";
 
 const router = Router();
 

@@ -1,7 +1,7 @@
-import { prisma } from '../../config/prisma';
-import { AppError } from '../../utils/AppError';
-import { UpdateProductInput } from '../product.schema';
-import { deleteFromCloudinary } from '../utils/cloudinary/deleteFromCloudinary';
+import { prisma } from '../../config/prisma.js';
+import { AppError } from '../../utils/AppError.js';
+import { UpdateProductInput } from '../product.schema.js';
+import { deleteFromCloudinary } from '../utils/cloudinary/deleteFromCloudinary.js';
 
 // Helper function to validate category exists
 const validateCategory = async (categoryId: string) => {

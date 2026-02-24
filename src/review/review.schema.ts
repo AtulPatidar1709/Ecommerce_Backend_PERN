@@ -3,7 +3,7 @@ import {
   commentField,
   productIdField,
   retingField,
-} from '../types/common/fields.schema';
+} from '../types/common/fields.schema.js';
 
 export const createReviewSchema = z.object({
   productId: productIdField,

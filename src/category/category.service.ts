@@ -1,6 +1,6 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
-import { CreateCategoryInput, UpdateCategoryInput } from './category.schema';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
+import { CreateCategoryInput, UpdateCategoryInput } from "./category.schema.js";
 
 export const createCategory = async (data: CreateCategoryInput) => {
   // Check if slug already exists

@@ -4,9 +4,9 @@ import {
   updateCouponSchema,
   validateCouponSchema,
   getCouponSchema,
-} from './coupon.schema';
-import * as couponService from './coupon.service';
-import { getUserId } from '../auth/helper/helper';
+} from "./coupon.schema.js";
+import * as couponService from "./coupon.service.js";
+import { getUserId } from '../auth/helper/helper.js';
 
 export const createCouponController = async (
   req: Request,

@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import * as productService from './product.service';
+import * as productService from "./product.service.js";
 import {
   getAllProductsQuerySchema,
   updateProductSchema,
-} from './product.schema';
-import { AppError } from '../utils/AppError';
+} from "./product.schema.js";
+import { AppError } from '../utils/AppError.js';
 import {
   getFiles,
   parseCreateProductData,
@@ -12,7 +12,7 @@ import {
   uploadImages,
   validateFiles,
   validatePrimaryIndex,
-} from './helper/controller.helper';
+} from "./helper/controller.helper.js";
 
 export const createProductController = async (
   req: Request,

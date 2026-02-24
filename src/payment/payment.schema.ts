@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { orderIdField } from '../types/common/fields.schema';
+import { orderIdField } from '../types/common/fields.schema.js';
 
 export const initiatePaymentSchema = z.object({
   orderId: orderIdField,

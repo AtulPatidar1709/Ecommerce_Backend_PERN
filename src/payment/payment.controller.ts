@@ -2,26 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import {
   verifyRazorpayPaymentSchema,
   getPaymentSchema,
-} from './payment.schema';
-import * as paymentService from './payment.service';
-import { AppError } from '../utils/AppError';
-
-// export const initiatePaymentController = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction,
-// ) => {
-//   try {
-//     const user = req.user;
-//     if (!user) {
-//       throw new AppError('Unauthorized', 401);
-//     }
-//     const result = await paymentService.initiatePayment(user, req.body);
-//     res.status(201).json(result);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+} from "./payment.schema.js";
+import * as paymentService from "./payment.service.js";
+import { AppError } from '../utils/AppError.js';
+import { getUserId } from '../auth/helper/helper.js';
+import { AuthenticatedRequest } from '../middlewares/auth_middlewares/types/AuthenticatedRequestTypes.js';
 
 export const getPaymentByOrderIdController = async (
   req: Request,
@@ -29,7 +14,7 @@ export const getPaymentByOrderIdController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -52,7 +37,7 @@ export const getPaymentByIdController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -71,7 +56,7 @@ export const verifyRazorpayPaymentController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -97,7 +82,7 @@ export const verifyRazorpayPaymentController = async (
 };
 
 export const initiatePaymentController = async (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) => {

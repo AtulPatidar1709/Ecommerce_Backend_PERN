@@ -7,9 +7,9 @@ import {
   updateReviewController,
   deleteReviewController,
   deleteReviewByAdminController,
-} from './review.controller';
-import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
-import isAdmin from '../middlewares/auth_middlewares/isAdmin';
+} from "./review.controller.js";
+import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware.js';
+import isAdmin from '../middlewares/auth_middlewares/isAdmin.js';
 
 const router = Router();
 

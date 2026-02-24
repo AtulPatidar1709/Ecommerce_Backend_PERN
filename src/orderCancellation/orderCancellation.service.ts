@@ -1,10 +1,10 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
+import { RequestStatus } from '@prisma/client';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 import {
   CreateOrderCancellationInput,
   UpdateOrderCancellationInput,
-} from './orderCancellation.schema';
-import { RequestStatus } from '../../prisma/generated/prisma/enums';
+} from "./orderCancellation.schema.js";
 
 /**
  * Create cancellation request (USER)

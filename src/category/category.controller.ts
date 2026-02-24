@@ -3,14 +3,14 @@ import {
   createCategorySchema,
   updateCategorySchema,
   getCategorySchema,
-} from './category.schema';
-import * as categoryService from './category.service';
-import { AppError } from '../utils/AppError';
+} from "./category.schema.js";
+import * as categoryService from "./category.service.js";
+import { AppError } from '../utils/AppError.js';
 import {
   getFiles,
   uploadImages,
   validateFiles,
-} from '../product/helper/controller.helper';
+} from '../product/helper/controller.helper.js';
 
 export const createCategoryController = async (
   req: Request,

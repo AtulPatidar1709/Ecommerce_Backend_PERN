@@ -1,21 +1,21 @@
 import cors from 'cors';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import { config } from './config/config';
-import authRoutes from './auth/auth.routes';
-import cartRoutes from './cart/cart.routes';
-import userRoutes from './user/user.routes';
-import orderRoutes from './order/order.routes';
-import couponRoutes from './coupon/coupon.routes';
-import reviewRoutes from './review/review.routes';
-import bannerRoutes from './banner/banner.routes';
-import paymentRoutes from './payment/payment.routes';
-import productRoutes from './product/product.routes';
-import addressRoutes from './address/address.routes';
-import categoryRoutes from './category/category.routes';
-import orderReturnRoutes from './orderReturn/orderReturn.routes';
-import { globalErrorHandler } from './middlewares/globalErrorHandler';
-import orderCancellationRoutes from './orderCancellation/orderCancellation.routes';
+import { config } from "./config/config.js";
+import authRoutes from "./auth/auth.routes.js";
+import cartRoutes from "./cart/cart.routes.js";
+import userRoutes from "./user/user.routes.js";
+import orderRoutes from "./order/order.routes.js";
+import couponRoutes from "./coupon/coupon.routes.js";
+import reviewRoutes from "./review/review.routes.js";
+import bannerRoutes from "./banner/banner.routes.js";
+import paymentRoutes from "./payment/payment.routes.js";
+import productRoutes from "./product/product.routes.js";
+import addressRoutes from "./address/address.routes.js";
+import categoryRoutes from "./category/category.routes.js";
+import orderReturnRoutes from "./orderReturn/orderReturn.routes.js";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler.js";
+import orderCancellationRoutes from "./orderCancellation/orderCancellation.routes.js";
 
 const app = express();
 

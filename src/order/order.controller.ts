@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
-import * as orderService from './order.service';
+import * as orderService from "./order.service.js";
 import {
   getOrderByIdSchema,
   createOrderSchema,
   updateOrderStatusSchema,
-} from './oder.schema';
-import { getUserId } from '../auth/helper/helper';
-import { parseQuery } from './helper/helper';
-import { AppError } from '../utils/AppError';
+} from "./oder.schema.js";
+import { getUserId } from '../auth/helper/helper.js';
+import { parseQuery } from "./helper/helper.js";
+import { AppError } from '../utils/AppError.js';
 
 export const createOrderController = async (
   req: Request,

@@ -1,5 +1,5 @@
-import { prisma } from '../../config/prisma';
-import { ProductSummaryQuery } from './product.summary.schema';
+import { prisma } from '../../config/prisma.js';
+import { ProductSummaryQuery } from "./product.summary.schema.js";
 
 export const getProductSummary = async (query: ProductSummaryQuery) => {
   const { promotion, category, limit = 4 } = query;
@@ -39,7 +39,7 @@ export const getProductSummary = async (query: ProductSummaryQuery) => {
         orderBy: { position: 'asc' },
         take: 2,
         select: {
-          imageUrl: true,
+          productId: true,
           isPrimary: true,
         },
       },

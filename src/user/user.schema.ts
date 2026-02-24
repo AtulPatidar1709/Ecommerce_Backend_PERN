@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { nameField, phoneField } from '../types/common/fields.schema';
+import { nameField, phoneField } from '../types/common/fields.schema.js';
 
 export const updateProfileSchema = z.object({
   name: nameField.optional(),

@@ -3,9 +3,10 @@ import {
   createReviewSchema,
   updateReviewSchema,
   getReviewSchema,
-} from './review.schema';
-import * as reviewService from './review.service';
-import { AppError } from '../utils/AppError';
+} from "./review.schema.js";
+import * as reviewService from "./review.service.js";
+import { AppError } from '../utils/AppError.js';
+import { getUserId } from '../auth/helper/helper.js';
 
 export const createReviewController = async (
   req: Request,
@@ -13,7 +14,7 @@ export const createReviewController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -57,7 +58,7 @@ export const getUserReviewsController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -92,7 +93,7 @@ export const updateReviewController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -114,7 +115,7 @@ export const deleteReviewController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }

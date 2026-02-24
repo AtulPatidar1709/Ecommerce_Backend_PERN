@@ -3,13 +3,13 @@ import {
   createBannerSchema,
   updateBannerSchema,
   getBannerSchema,
-} from './banner.schema';
-import * as bannerService from './banner.service';
+} from "./banner.schema.js";
+import * as bannerService from "./banner.service.js";
 import {
   getFiles,
   uploadImages,
   validateFiles,
-} from '../product/helper/controller.helper';
+} from '../product/helper/controller.helper.js';
 
 export const createBannerController = async (
   req: Request,

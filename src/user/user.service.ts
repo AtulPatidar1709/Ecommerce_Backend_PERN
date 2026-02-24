@@ -1,7 +1,7 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 import bcrypt from 'bcrypt';
-import { UpdateProfileInput, ChangePasswordInput } from './user.schema';
+import { UpdateProfileInput, ChangePasswordInput } from "./user.schema.js";
 
 export const getUserProfile = async (userId: string) => {
   const user = await prisma.user.findUnique({

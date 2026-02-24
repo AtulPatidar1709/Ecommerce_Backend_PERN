@@ -1,10 +1,10 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 import {
   GetOrderByIdInput,
   GetOrdersQuery,
   UpdateOrderStatusInput,
-} from './oder.schema';
+} from "./oder.schema.js";
 // ✅ Validate products using only cartItem IDs
 
 const validateUserAddress = async (userId: string, addressId: string) => {

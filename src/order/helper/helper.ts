@@ -1,4 +1,4 @@
-import { getOrdersQuerySchema } from '../oder.schema';
+import { getOrdersQuerySchema } from '../oder.schema.js';
 
 // Helper to parse and validate query parameters
 const parseQuery = (query: Record<string, unknown>) => {

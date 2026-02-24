@@ -1,6 +1,6 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
-import { CreateReviewInput, UpdateReviewInput } from './review.schema';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
+import { CreateReviewInput, UpdateReviewInput } from "./review.schema.js";
 
 export const createReview = async (userId: string, data: CreateReviewInput) => {
   // Verify product exists

@@ -1,7 +1,7 @@
 import { Request } from 'express';
-import { AppError } from '../../utils/AppError';
-import { createProductSchema } from '../product.schema';
-import { uploadImageBuffer } from '../utils/cloudinary/uploadToCloudinary';
+import { AppError } from '../../utils/AppError.js';
+import { createProductSchema } from '../product.schema.js';
+import { uploadImageBuffer } from '../utils/cloudinary/uploadToCloudinary.js';
 
 const getFiles = (req: Request): Express.Multer.File[] => {
   return (req.files as Express.Multer.File[]) || [];

@@ -411,7 +411,7 @@ npm run format
 ### Using Service Layer
 
 ```typescript
-import * as categoryService from './category.service';
+import * as categoryService from "./category.service.js";
 
 // Create category
 const result = await categoryService.createCategory({
@@ -445,9 +445,9 @@ export const createCategoryController = async (
 
 ```typescript
 import { Router } from 'express';
-import { createCategoryController } from './category.controller';
-import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
-import isAdmin from '../middlewares/auth_middlewares/isAdmin';
+import { createCategoryController } from "./category.controller.js";
+import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware.js';
+import isAdmin from '../middlewares/auth_middlewares/isAdmin.js';
 
 const router = Router();
 

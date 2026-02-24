@@ -5,7 +5,7 @@ import {
   passField,
   phoneField,
   userIdField,
-} from '../types/common/fields.schema';
+} from '../types/common/fields.schema.js';
 
 export const verifiCationTypeSchema = z.object({
   email: emailField,

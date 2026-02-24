@@ -3,10 +3,11 @@ import {
   createAddressSchema,
   updateAddressSchema,
   getAddressSchema,
-} from './address.schema';
-import * as addressService from './address.service';
-import { AppError } from '../utils/AppError';
-import { prisma } from '../config/prisma';
+} from "./address.schema.js";
+import * as addressService from "./address.service.js";
+import { AppError } from '../utils/AppError.js';
+import { prisma } from '../config/prisma.js';
+import { getUserId } from '../auth/helper/helper.js';
 
 export const createAddressController = async (
   req: Request,
@@ -14,7 +15,7 @@ export const createAddressController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
 
     if (!userId) {
       throw new AppError('User ID not found', 401);
@@ -34,7 +35,7 @@ export const getAllAddressesController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -52,7 +53,7 @@ export const getAddressByIdController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -79,7 +80,7 @@ export const updateAddressController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -101,7 +102,7 @@ export const deleteAddressController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }

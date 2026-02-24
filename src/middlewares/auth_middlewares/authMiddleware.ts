@@ -1,11 +1,12 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { AppError } from '../../utils/AppError';
-import { config } from '../../config/config';
-import { isJwtPayload } from '../../types/isJwtPayload';
+import { AppError } from '../../utils/AppError.js';
+import { config } from '../../config/config.js';
+import { isJwtPayload } from '../../types/isJwtPayload.js';
+import { AuthenticatedRequest } from "./types/AuthenticatedRequestTypes.js";
 
 export const requireAuth = (
-  req: Request,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction,
 ) => {
@@ -25,8 +26,8 @@ export const requireAuth = (
 
     req.user = {
       id: decoded.sub,
-      email: decoded.email,
-      role: decoded.role || 'USER',
+      email: decoded.email as string,
+      role: (decoded.role || 'USER') as 'USER' | 'ADMIN',
     };
 
     next();

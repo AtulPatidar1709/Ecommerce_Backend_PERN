@@ -1,10 +1,10 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 import {
   CreateCouponInput,
   UpdateCouponInput,
   ValidateCouponInput,
-} from './coupon.schema';
+} from "./coupon.schema.js";
 
 export const createCoupon = async (data: CreateCouponInput) => {
   // Check if coupon code already exists

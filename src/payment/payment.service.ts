@@ -1,14 +1,14 @@
 import Razorpay from 'razorpay';
-import { PaymentStatus } from '../../prisma/generated/prisma/enums';
-import { config } from '../config/config';
-import { prisma } from '../config/prisma';
-import { CreateOrderInput, createOrderSchema } from '../order/oder.schema';
+import { config } from '../config/config.js';
+import { prisma } from '../config/prisma.js';
+import { CreateOrderInput, createOrderSchema } from '../order/oder.schema.js';
 import {
   createPendingOrder,
   validateProductsByCart,
-} from '../order/order.service';
-import { AppError } from '../utils/AppError';
+} from '../order/order.service.js';
+import { AppError } from '../utils/AppError.js';
 import crypto from 'crypto';
+import { PaymentStatus } from '@prisma/client';
 
 const rzp = new Razorpay({
   key_id: config.rzpTestApiKey!,
@@ -220,7 +220,7 @@ export const verifyRazorpayPayment = async (
 
     // 3️⃣ Create order items
     await tx.orderItem.createMany({
-      data: Array.from(productMap.entries()).map(([productId, quantity]) => ({
+      data: Array.from(productMap.entries()).map(([productId, quantity] : any) => ({
         orderId,
         productId,
         quantity: quantity[0] || 0,

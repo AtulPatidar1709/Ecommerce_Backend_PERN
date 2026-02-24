@@ -1,17 +1,17 @@
-import { prisma } from '../config/prisma';
+import { prisma } from '../config/prisma.js';
 import crypto from 'crypto';
 import bcrypt from 'bcrypt';
-import { generateOtp } from '../utils/otp';
-import { generateAccessToken, generateRefreshToken } from '../utils/jwt';
+import { generateOtp } from '../utils/otp.js';
+import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
 import {
   LoginInput,
   OtpVerifyInput,
   RegisterInput,
   SendOtpInput,
   userType,
-} from './auth.schema';
-import { sendEmail } from './helper/nodeMailer';
-import { AppError } from '../utils/AppError';
+} from "./auth.schema.js";
+import { sendEmail } from "./helper/nodeMailer.js";
+import { AppError } from '../utils/AppError.js';
 
 export const register = async (data: RegisterInput) => {
   const hashedPassword = await bcrypt.hash(data.password, 10);

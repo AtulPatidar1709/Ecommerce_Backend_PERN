@@ -1,9 +1,9 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
 import {
   CreateOrderReturnInput,
   UpdateOrderReturnInput,
-} from './orderReturn.schema';
+} from "./orderReturn.schema.js";
 
 type OrderReturnStatusType =
   | 'REQUESTED'

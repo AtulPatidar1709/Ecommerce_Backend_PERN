@@ -3,9 +3,10 @@ import {
   createOrderReturnSchema,
   updateOrderReturnSchema,
   getOrderReturnSchema,
-} from './orderReturn.schema';
-import * as orderReturnService from './orderReturn.service';
-import { AppError } from '../utils/AppError';
+} from "./orderReturn.schema.js";
+import * as orderReturnService from "./orderReturn.service.js";
+import { AppError } from '../utils/AppError.js';
+import { getUserId } from '../auth/helper/helper.js';
 
 export const createOrderReturnController = async (
   req: Request,
@@ -13,7 +14,7 @@ export const createOrderReturnController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -32,7 +33,7 @@ export const getUserOrderReturnsController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -57,7 +58,7 @@ export const getOrderReturnByIdController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }

@@ -5,9 +5,9 @@ import {
   getOrderCancellationByIdController,
   updateOrderCancellationController,
   getAllOrderCancellationsController,
-} from './orderCancellation.controller';
-import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware';
-import isAdmin from '../middlewares/auth_middlewares/isAdmin';
+} from "./orderCancellation.controller.js";
+import { requireAuth } from '../middlewares/auth_middlewares/authMiddleware.js';
+import isAdmin from '../middlewares/auth_middlewares/isAdmin.js';
 
 const router = Router();
 

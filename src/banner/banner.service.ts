@@ -1,6 +1,6 @@
-import { prisma } from '../config/prisma';
-import { AppError } from '../utils/AppError';
-import { CreateBannerInput, UpdateBannerInput } from './banner.schema';
+import { prisma } from '../config/prisma.js';
+import { AppError } from '../utils/AppError.js';
+import { CreateBannerInput, UpdateBannerInput } from "./banner.schema.js";
 
 export const createBanner = async (data: CreateBannerInput) => {
   const banner = await prisma.banner.create({

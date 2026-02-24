@@ -3,9 +3,10 @@ import {
   updateProfileSchema,
   changePasswordSchema,
   getUserSchema,
-} from './user.schema';
-import * as userService from './user.service';
-import { AppError } from '../utils/AppError';
+} from "./user.schema.js";
+import * as userService from "./user.service.js";
+import { AppError } from '../utils/AppError.js';
+import { getUserId } from '../auth/helper/helper.js';
 
 export const getUserProfileController = async (
   req: Request,
@@ -13,7 +14,7 @@ export const getUserProfileController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -31,7 +32,7 @@ export const updateProfileController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -50,7 +51,7 @@ export const changePasswordController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -69,7 +70,7 @@ export const getUserStatsController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
@@ -117,7 +118,7 @@ export const deactivateAccountController = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.user?.id;
+    const userId = getUserId(req);
     if (!userId) {
       throw new AppError('User ID not found', 401);
     }
